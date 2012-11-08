@@ -1,0 +1,65 @@
+
+
+// Mandelbrot set computations
+// See http://en.wikipedia.org/wiki/Mandelbrot_set
+
+use RGB, Complex64;
+
+operator generateMandelbrot(
+  io RGB pixel,
+  Complex64 center,
+  Float64 zoom,
+  Size maxIterations,
+  Index index,
+  Size cols,
+  Size rows
+  )
+{
+  Index row = index / cols;
+  Index col = index % cols;
+  
+  Float64 width = 4.0 / zoom;
+  Float64 height = width / cols * rows;
+  Complex64 c(
+    center.re - width/2 + Float64(col) / Float64(cols - 1) * width,
+    center.im - height/2 + Float64(row) / Float64(rows - 1) * height,
+    );
+  
+  Size dwell = 0;
+  // Test if point lies within main cardoid of set
+  Float64 reOffset = c.re - 0.25;
+  Float64 reOffsetSq = reOffset*reOffset;
+  Float64 imSq = c.im*c.im;
+  Float64 q = reOffsetSq + imSq;
+  if ( q*(q+reOffset) < 0.25*imSq )
+    dwell = maxIterations;
+  else {
+    dwell = 0;
+    Complex64 z = c;
+    for (dwell=0; z.normSq() < 4 && dwell < maxIterations; ++dwell) {
+      z = z*z + c;
+    }
+  }
+  
+  if (dwell == maxIterations)
+    pixel = RGB(0, 0, 0);
+  else
+  {
+    Byte shade = dwell % 128 + 128;
+    Byte offset = ~((dwell / 128) % 7);
+    pixel = RGB(
+      offset & 1? shade: 0,
+      offset & 2? shade: 0,
+      offset & 4? shade: 0
+      );
+  }
+}
+
+
+operator resizeNode(
+  io Container self, 
+  Size width,
+  Size height
+) {
+  self.resize( width * height );
+}
