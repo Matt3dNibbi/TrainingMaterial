@@ -71,7 +71,7 @@ node.setData( 'vec2_2', 0, newVec3_2 )
 # The operator that will create our particles
 operator = fabricClient.DG.createOperator('addVec2')
 operator.setEntryPoint('addVec2')
-operator.setSourceCode('None', open('vec2Add.kl').read())
+operator.setSourceCode(open('vec2Add.kl').read())
 
 # We instanciate a Binding object. It will glue the data with the operator.
 binding = fabricClient.DG.createBinding()
