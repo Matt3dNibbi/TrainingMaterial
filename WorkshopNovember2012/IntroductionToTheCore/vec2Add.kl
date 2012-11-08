@@ -1,0 +1,17 @@
+
+ 
+
+
+
+use Vec2;
+
+operator addVec2(Vec2 vec2_1, Vec2 vec2_2 ){
+  report(vec2_1);
+  report(vec2_2);
+  report(vec2_1 + vec2_2);
+	report((vec2_1 + vec2_2).sum());
+}
+
+
+
+
