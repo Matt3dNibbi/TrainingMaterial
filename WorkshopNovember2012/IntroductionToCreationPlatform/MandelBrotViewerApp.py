@@ -8,7 +8,7 @@ from PySide import QtGui, QtCore
 
 from MandelbrotImage import MandelbrotImage
 
-#from FabricEngine.CreationPlatform.PySide import *
+from FabricEngine.CreationPlatform.PySide import *
 
 
 class MandelBrotViewerApp(Basic3DDemoApplication):
@@ -25,17 +25,17 @@ class MandelBrotViewerApp(Basic3DDemoApplication):
 
     self.setWindowTitle("MandelBrot Viewer App")
 
-    # # query the constructed components
-    # scene = self.getScene()
-    # viewport = self.getViewport()
-    # standardShadersGroup = scene.getNode('StandardShaders')
-    # light = scene.getNode('CameraLight')
+    # query the constructed components
+    scene = self.getScene()
+    viewport = self.getViewport()
+    standardShadersGroup = scene.getNode('StandardShaders')
+    light = scene.getNode('CameraLight')
 
-    # phong = Material(scene,
-    #   xmlFile='Standard/PhongTextured',
-    #   shaderGroup=standardShadersGroup,
-    #   light=light
-    # )
+    phong = Material(scene,
+      xmlFile='Standard/PhongTextured',
+      shaderGroup=standardShadersGroup,
+      light=light
+    )
     
     self.constructionCompleted()
 
