@@ -2,7 +2,6 @@
 
 import FabricEngine.Core
 
-# FabricCoreClient is the object that let you communicate with the core
 fabricClient = FabricEngine.Core.createClient()
 
 
