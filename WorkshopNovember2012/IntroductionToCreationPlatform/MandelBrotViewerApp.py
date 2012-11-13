@@ -6,9 +6,12 @@
 import math, random
 from PySide import QtGui, QtCore
 
-from MandelbrotImage import MandelbrotImage
-
 from FabricEngine.CreationPlatform.PySide import *
+from FabricEngine.CreationPlatform.Nodes.Rendering import *
+
+from MandelbrotImage import MandelbrotImage
+import Float64WidgetImpl
+
 
 
 class MandelBrotViewerApp(Basic3DDemoApplication):

@@ -3,16 +3,11 @@
 # Copyright 2010-2012 Fabric Technologies Inc. All rights reserved.
 #
 
-from PySide import QtGui, QtCore
 
-from FabricEngine.CreationPlatform.Nodes.Rendering import *
+import FabricEngine.CreationPlatform
+from Complex64 import Complex64
 from FabricEngine.CreationPlatform.Nodes.Images.Image2DImpl import Image2D
 from FabricEngine.CreationPlatform.Nodes.Animation.TimeImpl import Time
-
-from Complex64 import Complex64
-import Float64WidgetImpl
-
-
 
 class MandelbrotImage(Image2D):
   
@@ -94,5 +89,9 @@ class MandelbrotImage(Image2D):
 
     self.addReferenceInterface('Time', Time, False, __changeTimeNode)
 
+    
+###########################################
+# 5.0 Register the new custom node so that it will show up in the 
+# user interfaces, and be saved and loaded with the scene files.
 
 MandelbrotImage.registerNodeClass('MandelbrotImage')

@@ -4,6 +4,7 @@ from FabricEngine.CreationPlatform import iif
 from PySide import QtGui, QtCore
 from FabricEngine.CreationPlatform.PySide.Widgets.RT.RegisteredTypeWidgetImpl import RegisteredTypeWidget
 
+# Define a custom type for representing Complex numbers with real and imaginary components
 class Complex64(Base):
   
   re = None
@@ -25,6 +26,7 @@ FabricEngine.CreationPlatform.RT.registerType('Complex64', {
   }
 })
 
+# Define a custom widget for displaying Complex64 values. 
 class Complex64Widget(QtGui.QWidget, RegisteredTypeWidget):
   def __init__(self, **options):
     
