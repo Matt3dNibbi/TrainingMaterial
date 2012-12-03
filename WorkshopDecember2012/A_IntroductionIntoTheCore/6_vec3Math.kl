@@ -1,0 +1,13 @@
+use Vec3;
+
+operator vec3ComputeOp(
+  Vec3 a,
+  Vec3 b,
+  io Vec3 sum,
+  io Vec3 product
+) {
+  sum = a + b;
+  product = a * b;
+  report(sum);
+  report(product);
+}
