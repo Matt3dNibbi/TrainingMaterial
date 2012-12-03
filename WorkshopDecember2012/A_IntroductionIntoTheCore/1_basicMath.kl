@@ -1,0 +1,10 @@
+
+
+operator addOp(
+  Scalar a,
+  Scalar b,
+  io Scalar result
+) {
+  result = a + b;
+  report("Added "+a+" and "+b+" to "+result);
+}
