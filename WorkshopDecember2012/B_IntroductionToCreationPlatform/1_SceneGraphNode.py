@@ -13,13 +13,13 @@ class MyNode(SceneGraphNode):
     super(MyNode, self).__init__(scene, **options)
 
     # create a core node
-    scalarNode = self.constructDGNode('Scalars')
-    scalarNode.addMember('a', 'Scalar', 1.0)
-    scalarNode.addMember('b', 'Scalar', 2.0)
-    scalarNode.addMember('result', 'Scalar')
+    scalarDGNode = self.constructDGNode('Scalars')
+    scalarDGNode.addMember('a', 'Scalar', 1.0)
+    scalarDGNode.addMember('b', 'Scalar', 2.0)
+    scalarDGNode.addMember('result', 'Scalar')
 
     # The operator that will perform our computation
-    self.bindDGOperator(scalarNode.bindings,
+    self.bindDGOperator(scalarDGNode.bindings,
       name = 'addOp', 
       fileName = '1_basicMath.kl',
       layout = [
