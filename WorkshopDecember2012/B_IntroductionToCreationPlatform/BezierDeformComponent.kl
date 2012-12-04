@@ -1,0 +1,83 @@
+/*
+ *  Copyright 2010-2012 Fabric Engine Inc. All rights reserved.
+ */
+
+use Vec3;
+use PolygonMeshRT;
+use GeometryAttributesRT;
+
+operator bezierDeformOpTask(
+  Index index,
+  io ScalarAttribute attribute,
+  Scalar origins[],
+  Vec2 yBounds,
+  Vec3 control1,
+  Vec3 control2,
+  Vec3 control3,
+  Vec3 control4
+) {
+  Index index3 = index * 3;
+  Vec3 origin(origins[index3], origins[index3 + 1], origins[index3 + 2]);
+  
+  // compute the u value
+  Scalar uValue = (origin.y - yBounds.x) / (yBounds.y - yBounds.x);
+
+  // localize the position  
+  Vec3 position = origin;
+  position.y = 0.0;
+  
+  // output the position
+  attribute.data[index3] = position.x;
+  attribute.data[index3+1] = position.y;
+  attribute.data[index3+2] = position.z;
+}
+
+operator bezierDeformOp(
+  io PolygonMesh mesh,
+  io GeometryAttributes attributes,
+  io Scalar origins[],
+  io Vec2 yBounds,
+  Vec3 control1,
+  Vec3 control2,
+  Vec3 control3,
+  Vec3 control4
+) {
+
+  // get the position attribute
+  AttributeKey posKey = attributes.getKey('positions');
+  ScalarAttribute posAttr = attributes.scalarAttributes[posKey.index];
+
+  // first time around init the origins
+  if(origins.size() == 0) {
+    origins += posAttr.data;
+
+    // compute the bounds for the Y axis
+    yBounds.x = origins[1];
+    yBounds.y = origins[1];
+    for(Size i=4;i<origins.size();i+=3) {
+      if(yBounds.x > origins[i])
+        yBounds.x = origins[i];
+      if(yBounds.y < origins[i])
+        yBounds.y = origins[i];
+    }
+  }
+  
+  // compute the number of points
+  Size posCount = origins.size() / 3;
+
+  // run the deformer in parallel
+  executeParallel(
+    bezierDeformOpTask,
+    posCount,
+    posAttr,
+    origins,
+    yBounds,
+    control1,
+    control2,
+    control3,
+    control4
+  );
+
+  // compute the normals
+  mesh.computeNormals(attributes);
+}
