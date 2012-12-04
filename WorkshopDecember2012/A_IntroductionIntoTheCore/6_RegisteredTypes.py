@@ -45,8 +45,6 @@ desc = {
   }
 }
 
-print desc
-
 fabricClient.RegisteredTypesManager.registerType( 'Vec3', desc )
 
 # construct two python vectors
@@ -87,7 +85,6 @@ calcNode.bindings.append(computeBinding)
 
 # execute the node
 print calcNode.getErrors()
-print computeOp.getDiagnostics()
 calcNode.evaluate()
 
 # retrieve the data as python types!

@@ -1,0 +1,14 @@
+function Vec3(Scalar x, Scalar y, Scalar z)
+{
+  this.x = x;
+  this.y = y;
+  this.z = z;
+}
+
+function Vec3 + (Vec3 a, Vec3 b) {
+  return Vec3(a.x + b.x, a.y + b.y, a.z + b.z);
+}
+
+function Vec3 * (Vec3 a, Vec3 b) {
+  return Vec3(a.x * b.x, a.y * b.y, a.z * b.z);
+}
