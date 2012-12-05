@@ -8,6 +8,8 @@ from FabricEngine.CreationPlatform.Nodes.Geometry.PolygonMeshImpl import Polygon
 
 class BezierDeformComponent(Component):
   
+  __prefix = None
+
   @classmethod
   def _setDefaultOptions(cls, options):
     super(BezierDeformComponent, cls)._setDefaultOptions(options)
@@ -20,12 +22,18 @@ class BezierDeformComponent(Component):
   @staticmethod
   def canApplyTo(node):
     return isinstance(node, PolygonMesh)
+
+  def getPrefix(self):
+    if self.__prefix is None:
+      raise Exception("Component has to be applied first.")
+    return self.__prefix
     
   def apply(self, node):
     super(BezierDeformComponent, self).apply(node)
 
-    # construct a suffix
-    prefix = 'comp_'+str(node.getNumComponents())
+    # construct a prefix
+    prefix = 'comp'+str(node.getNumComponents())+'_'
+    self.__prefix = prefix
 
     # get the core node
     geometryDGNode = node.getGeometryDGNode()
