@@ -23,7 +23,6 @@ class MyDeformerApp(Basic3DDemoApplication):
     # import the cube obj file
     importer = OBJImporter(scene, filePath='cube.obj')
     nodesList = importer.importAsset()
-    print nodesList
 
     # loop over all constructed nodes
     for name, node in nodesList.iteritems():

@@ -41,13 +41,22 @@ class BezierGizmoComponent(Component):
 
     # get the core node
     geometryDGNode = node.getGeometryDGNode()
+    geometryDGNode.addMember(prefix+'visible', 'Boolean', True)
     geometryDGNode.addMember(prefix+'gizmo', 'GizmoType')
+
+    # create a value interface to drive visibility
+    def getVisible():
+      return geometryDGNode.getData(prefix+'visible', 0)
+    def setVisible(value):
+      geometryDGNode.setData(prefix+'visible', 0, value)
+    self._addValueInterface('visible', 'Boolean', getVisible, setVisible)
 
     # add the operator
     node.bindDGOperator(geometryDGNode.bindings,
       name = 'bezierGizmoOp',
       fileName = buildAbsolutePath('BezierGizmoComponent.kl'),
       layout = [
+        'self.'+prefix+'visible',
         'self.'+prefix+'gizmo',
         'self.'+deformerComp.getPrefix()+'control1',
         'self.'+deformerComp.getPrefix()+'control2',

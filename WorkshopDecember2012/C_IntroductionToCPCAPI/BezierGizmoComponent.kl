@@ -1,0 +1,42 @@
+/*
+ *  Copyright 2010-2012 Fabric Engine Inc. All rights reserved.
+ */
+
+use Vec3;
+use Xfo;
+use Color;
+use GizmoType;
+
+operator bezierGizmoOp(
+  Boolean visible,
+  io GizmoType gizmo,
+  Vec3 control1,
+  Vec3 control2,
+  Vec3 control3,
+  Vec3 control4
+) {
+
+  gizmo.reset();
+  if(!visible)
+    return;
+
+  Color bright = Color(0.0, 1.0, 0.0, 1.0);
+  Color dark = Color(0.0, 0.25, 0.0, 1.0);
+  Xfo xfo;
+
+  xfo.tr = control1;
+  gizmo.geometry.drawTrianglesSphere(xfo, 1.0, bright, 4);
+  gizmo.endGizmo(xfo, "controlpoint", 0, 1);
+  xfo.tr = control2;
+  gizmo.geometry.drawLine(control1, control2, dark);
+  gizmo.geometry.drawTrianglesSphere(xfo, 0.5, dark, 4);
+  gizmo.endGizmo(xfo, "controlpoint", 0, 2);
+  xfo.tr = control3;
+  gizmo.geometry.drawLine(control3, control4, dark);
+  gizmo.geometry.drawTrianglesSphere(xfo, 0.5, dark, 4);
+  gizmo.endGizmo(xfo, "controlpoint", 0, 3);
+  xfo.tr = control4;
+  gizmo.geometry.drawTrianglesSphere(xfo, 1.0, bright, 4);
+  gizmo.endGizmo(xfo, "controlpoint", 0, 4);
+
+}

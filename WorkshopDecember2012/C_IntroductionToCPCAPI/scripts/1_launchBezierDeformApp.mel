@@ -1,0 +1,5 @@
+$cpDir = `getenv "FABRIC_CREATIONPLATFORM_DIR"`;
+CPLoadPythonApplication -f ($cpDir + "/CPCAPI/Apps/BasicSampleApp.py");
+
+$render = createNode("CPRenderPassLocator");
+setAttr -type "string" ($render + ".path") "BasicSampleApp";

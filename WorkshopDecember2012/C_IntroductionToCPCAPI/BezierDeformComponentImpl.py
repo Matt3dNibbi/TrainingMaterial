@@ -24,6 +24,7 @@ class BezierDeformComponent(Component):
   def canApplyTo(node):
     print node
     print PolygonMesh
+    print isinstance(node, PolygonMesh)
     return isinstance(node, PolygonMesh)
 
   def getPrefix(self):
