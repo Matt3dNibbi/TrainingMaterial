@@ -237,7 +237,8 @@ ul#tools li a#btn-select{
   right:251px;
   top:0;
   bottom:0;
-  /*min-width:960px;*/
+  /*max-width:960px;*/
+  /*max-height:720px;*/
 }
 
 #viewports {

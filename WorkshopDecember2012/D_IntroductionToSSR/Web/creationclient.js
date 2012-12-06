@@ -10,7 +10,7 @@ $(function() {
     //client.options.jpegQuality = 50;
 
     if(viewportSizeFactor == undefined)
-      viewportSizeFactor = 1.0
+      viewportSizeFactor = 0.5
 
     client.viewports = {};
     client.viewport = undefined;
