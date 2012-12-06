@@ -59,7 +59,7 @@ operator bezierDeformOp(
   Vec3 control4
 ) {
 
-  if(attributes.size() == 0)
+  if(attributes.size() == 0 || !attributes.has('positions'))
     return;
 
   // get the position attribute

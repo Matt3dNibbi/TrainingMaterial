@@ -25,22 +25,59 @@ class MyDeformerApp(IntegratedApplication):
 
     scene = self.getScene()
 
-    # import the cube obj file
-    objPath = os.path.join(self.getApplicationFolder(), 'cube.obj')
-    importer = OBJImporter(scene, filePath=objPath)
-    nodesList = importer.importAsset()
-
-    # loop over all constructed nodes
-    for name, node in nodesList.iteritems():
-      if isinstance(node, PolygonMesh):
-        self.__geometry = node
-        break
-
-    # add the bezier deformer and gizmo
+    # setup an empty polygon mesh node
+    self.__geometry = PolygonMesh(scene, name = "DeformedMesh")
+    self.__geometry.addComponent(PolygonMeshFromArraysComponent())
     self.__deformerComp = BezierDeformComponent()
     self.__gizmoComp = BezierGizmoComponent(deformerComp = self.__deformerComp)
     self.__geometry.addComponent(self.__deformerComp)
     self.__geometry.addComponent(self.__gizmoComp)
+
+    if self.runsStandalone():
+
+      # import the cube obj file
+      objPath = os.path.join(self.getApplicationFolder(), 'cube.obj')
+      importer = OBJImporter(scene, filePath=objPath, constructMaterials = False)
+      nodesList = importer.importAsset()
+  
+      # loop over all constructed nodes
+      for name, node in nodesList.iteritems():
+        if isinstance(node, PolygonMesh):
+          node.addComponent(PolygonMeshToArraysComponent())
+
+          def connectMeshToMesh(data):
+            node = data['node']
+
+            # add an operator which will copy the arrays
+            self.__geometry.getGeometryDGNode().setDependency(node.getGeometryDGNode(), 'inGeometry')
+            node.bindDGOperator(self.__geometry.getGeometryDGNode().bindings,
+              name = 'copyPolygonMeshFromArray',
+              sourceCode = [
+                'operator copyPolygonMeshFromArray(',
+                '  Vec3 outputTopoPositions[],',
+                '  Integer outputTopoIndices[],',
+                '  io Vec3 inputTopoPositions[],',
+                '  io Integer inputTopoIndices[]',
+                ') {',
+                '  inputTopoPositions = outputTopoPositions;',
+                '  inputTopoIndices = outputTopoIndices;',
+                '}'
+              ],
+              layout = [
+                'inGeometry.outputTopoPositions',
+                'inGeometry.outputTopoIndices',
+                'self.inputTopoPositions',
+                'self.inputTopoIndices'
+              ],
+              index = 0 # put this operator in the first place
+            )
+
+          self.__geometry.addReferenceInterface('InputGeometry', PolygonMesh, False, connectMeshToMesh)
+          self.__geometry.setInputGeometryNode(node)
+          break
+    else:
+      # if we are running integrated, provide the geometry back to the DCC
+      self.__geometry.addComponent(PolygonMeshToArraysComponent())
 
     # setup the gizmo
     self.__manipulator = GizmoManipulator(scene)
