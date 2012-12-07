@@ -19,20 +19,6 @@ calcNode.addMember('sum', 'Scalar')
 calcNode.setDependency(scalarNode, 'values')
 
 # The operator that will perform our computation
-mulOp = fabricClient.DG.createOperator('mulOp')
-mulOp.setEntryPoint('mulOp')
-mulOp.setSourceCode(open('3_basicMath.kl').read())
-
-# We instanciate a Binding object. It will glue the data with the operator.
-mulBinding = fabricClient.DG.createBinding()
-mulBinding.setOperator(mulOp)
-mulBinding.setParameterLayout([
-  'values.a',
-  'values.b',
-  'self.product'
-])
-
-# The operator that will perform our computation
 addOp = fabricClient.DG.createOperator('addOp')
 addOp.setEntryPoint('addOp')
 addOp.setSourceCode(open('3_basicMath.kl').read())
@@ -46,8 +32,22 @@ addBinding.setParameterLayout([
   'self.sum'
 ])
 
-calcNode.bindings.append(mulBinding)
+# The operator that will perform our computation
+mulOp = fabricClient.DG.createOperator('mulOp')
+mulOp.setEntryPoint('mulOp')
+mulOp.setSourceCode(open('3_basicMath.kl').read())
+
+# We instanciate a Binding object. It will glue the data with the operator.
+mulBinding = fabricClient.DG.createBinding()
+mulBinding.setOperator(mulOp)
+mulBinding.setParameterLayout([
+  'values.a',
+  'values.b',
+  'self.product'
+])
+
 calcNode.bindings.append(addBinding)
+calcNode.bindings.append(mulBinding)
 
 print calcNode.getErrors()
 

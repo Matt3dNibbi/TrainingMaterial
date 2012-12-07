@@ -32,21 +32,6 @@ resizeBinding.setParameterLayout([
 ])
 
 # The operator that will perform our computation
-mulOp = fabricClient.DG.createOperator('mulOp')
-mulOp.setEntryPoint('mulOp')
-mulOp.setSourceCode(open('4_basicMath.kl').read())
-
-# We instanciate a Binding object. It will glue the data with the operator.
-mulBinding = fabricClient.DG.createBinding()
-mulBinding.setOperator(mulOp)
-mulBinding.setParameterLayout([
-  'self.index',
-  'values.a<>',
-  'values.b<>',
-  'self.product'
-])
-
-# The operator that will perform our computation
 addOp = fabricClient.DG.createOperator('addOp')
 addOp.setEntryPoint('addOp')
 addOp.setSourceCode(open('4_basicMath.kl').read())
@@ -61,9 +46,24 @@ addBinding.setParameterLayout([
   'self.sum'
 ])
 
+# The operator that will perform our computation
+mulOp = fabricClient.DG.createOperator('mulOp')
+mulOp.setEntryPoint('mulOp')
+mulOp.setSourceCode(open('4_basicMath.kl').read())
+
+# We instanciate a Binding object. It will glue the data with the operator.
+mulBinding = fabricClient.DG.createBinding()
+mulBinding.setOperator(mulOp)
+mulBinding.setParameterLayout([
+  'self.index',
+  'values.a<>',
+  'values.b<>',
+  'self.product'
+])
+
 calcNode.bindings.append(resizeBinding)
-calcNode.bindings.append(mulBinding)
 calcNode.bindings.append(addBinding)
+calcNode.bindings.append(mulBinding)
 
 print calcNode.getErrors()
 

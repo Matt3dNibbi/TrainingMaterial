@@ -3,6 +3,7 @@ operator resizeOp(
   io Container self,
   Container values
 ) {
+  report("found "+values.size()+" values, resizing....");
   self.resize(values.size());
 }
 

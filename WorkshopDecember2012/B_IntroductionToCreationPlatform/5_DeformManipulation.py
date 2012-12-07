@@ -12,7 +12,7 @@ from FabricEngine.CreationPlatform.PySide import *
 from BezierDeformComponentImpl import BezierDeformComponent
 from BezierGizmoComponentImpl import BezierGizmoComponent
 
-class MyDeformerApp(Basic3DDemoApplication):
+class MyDeformerApp(CreationPlatformApplication):
 
   def __init__(self, **options):
     options.setdefault('enableRaycasting', True)

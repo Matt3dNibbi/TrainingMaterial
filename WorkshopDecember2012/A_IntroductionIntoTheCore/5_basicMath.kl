@@ -30,9 +30,11 @@ operator computeOp(
   Size count = values.size();
   self.resize(count);
 
-  // multiply all values in parallel
-  executeParallel(mulOp, count, a, b, product);
-
   // add all values in parallel
   executeParallel(addOp, count, a, b, sum);
+
+  report("I am single threaded.");
+
+  // multiply all values in parallel
+  executeParallel(mulOp, count, a, b, product);
 }

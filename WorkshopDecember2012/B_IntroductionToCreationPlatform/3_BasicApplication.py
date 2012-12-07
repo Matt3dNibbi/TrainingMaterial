@@ -6,7 +6,7 @@
 from FabricEngine.CreationPlatform.PySide import *
 from MyNodesImpl import MyValuesNode, MyResultsNode
 
-class MyApp(Basic3DDemoApplication):
+class MyApp(CreationPlatformApplication):
 
   def __init__(self, **options):
     super(MyApp, self).__init__(**options)

@@ -11,7 +11,7 @@ from FabricEngine.CreationPlatform.Nodes.Importers import *
 from FabricEngine.CreationPlatform.PySide import *
 from BezierDeformComponentImpl import BezierDeformComponent
 
-class MyDeformerApp(Basic3DDemoApplication):
+class MyDeformerApp(CreationPlatformApplication):
 
   def __init__(self, **options):
     super(MyDeformerApp, self).__init__(**options)

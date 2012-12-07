@@ -14,7 +14,7 @@ import Float64WidgetImpl
 
 
 
-class MandelBrotViewerApp(Basic3DDemoApplication):
+class MandelBrotViewerApp(CreationPlatformApplication):
   
   def __init__(self):
     super(MandelBrotViewerApp, self).__init__(

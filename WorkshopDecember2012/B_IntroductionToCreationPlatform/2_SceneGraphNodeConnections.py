@@ -91,7 +91,7 @@ class MyResultsNode(SceneGraphNode):
 
 # setup a scene and two nodes
 scene = Scene(None)
-values = MyValuesNode(scene, count = 1000)
+values = MyValuesNode(scene, count = 10)
 results = MyResultsNode(scene)
 
 # connect them through the reference interface

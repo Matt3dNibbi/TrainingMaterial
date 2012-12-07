@@ -37,6 +37,8 @@ class Vec3():
   def __str__(self):
     return "Vec3(x = " + str(self.x) + ", y = " + str(self.y) + ", z = " + str(self.z) + ")"
 
+# ------------------------------------------------------------
+
 desc = {
   'members': [ { 'x':'Scalar' }, { 'y':'Scalar' }, { 'z':'Scalar' } ],
   'constructor': Vec3,
@@ -55,7 +57,7 @@ b = Vec3(2.6, 17.5, 9.1)
 print a.add(b)
 print a.mul(b)
 
-vec3Node = fabricClient.DG.createNode('Scalars')
+vec3Node = fabricClient.DG.createNode('Vectors')
 vec3Node.addMember('a', 'Vec3', a)
 vec3Node.addMember('b', 'Vec3', b)
 

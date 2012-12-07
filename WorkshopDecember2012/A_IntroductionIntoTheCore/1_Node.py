@@ -14,7 +14,7 @@ scalarNode.addMember('b', 'Scalar', 2.0)
 scalarNode.addMember('result', 'Scalar')
 
 # The operator that will perform our computation
-addOp = fabricClient.DG.createOperator('addOp')
+addOp = fabricClient.DG.createOperator('myAddOp')
 addOp.setEntryPoint('addOp')
 addOp.setSourceCode(open('1_basicMath.kl').read())
 
