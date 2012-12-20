@@ -28,7 +28,7 @@
 $(document).ready(function() {
 
   var client = CreationPlatform.createClient();
-  client.connect("ws://"+'localhost'+":2047/", $('#viewports'));
+  client.connect("ws://localhost:2047/", $('#viewports'));
   viewport = client.addViewport('Viewport');
 
 });
