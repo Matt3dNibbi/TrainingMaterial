@@ -7,7 +7,9 @@ from PySide import QtCore
 
 from FabricEngine.CreationPlatform.PySide import *
 from FabricEngine.CreationPlatform.Nodes import *
-from FabricEngine.CreationPlatform.Nodes.Importers import *
+from FabricEngine.CreationPlatform.Nodes.Manipulation import *
+from FabricEngine.CreationPlatform.Nodes.Manipulation.GizmoInstanceImpl import *
+from FabricEngine.CreationPlatform.Nodes.Importers.OBJImporterImpl import OBJImporter
 from FabricEngine.CreationPlatform.PySide import *
 from BezierDeformComponentImpl import BezierDeformComponent
 from BezierGizmoComponentImpl import BezierGizmoComponent

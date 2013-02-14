@@ -16,7 +16,7 @@ calcNode.addMember('product', 'Scalar')
 calcNode.addMember('sum', 'Scalar')
 
 # Create a dependency called 'values'
-calcNode.setDependency(scalarNode, 'values')
+calcNode.setDependency('values', scalarNode)
 
 # The operator that will perform our computation
 addOp = fabricClient.DG.createOperator('addOp')

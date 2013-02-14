@@ -46,7 +46,7 @@ class MyResultsNode(SceneGraphNode):
       valueDGNode = node.getDGNode('Scalars')
 
       # connect the nodes
-      calcDGNode.setDependency(valueDGNode, 'values')
+      calcDGNode.setDependency('values', valueDGNode)
 
       # check if we have constructed the operators yet
       if not self.__operatorsConstructed:

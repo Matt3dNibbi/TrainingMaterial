@@ -49,7 +49,7 @@ class MyDeformerApp(IntegratedApplication):
             node = data['node']
 
             # add an operator which will copy the arrays
-            self.__geometry.getGeometryDGNode().setDependency(node.getGeometryDGNode(), 'inGeometry')
+            self.__geometry.getGeometryDGNode().setDependency('inGeometry', node.getGeometryDGNode())
             node.bindDGOperator(self.__geometry.getGeometryDGNode().bindings,
               name = 'copyPolygonMeshFromArray',
               sourceCode = [

@@ -66,7 +66,7 @@ calcNode.addMember('product', 'Vec3')
 calcNode.addMember('sum', 'Vec3')
 
 # Create a dependency called 'values'
-calcNode.setDependency(vec3Node, 'values')
+calcNode.setDependency('values', vec3Node)
 
 # The operator that will resize the node to allocate enough space
 computeOp = fabricClient.DG.createOperator('vec3ComputeOp')

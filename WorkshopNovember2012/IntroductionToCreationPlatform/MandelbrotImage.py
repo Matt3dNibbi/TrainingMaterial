@@ -71,7 +71,7 @@ class MandelbrotImage(BaseImage):
           
         dgnode.removeDependency('time')
       if data['node'] is not None:
-        dgnode.setDependency(data['node'].getDGNode(), 'time')
+        dgnode.setDependency('time', data['node'].getDGNode())
       
         self.__timeOpBindings = self.bindDGOperator(dgnode.bindings,
           name = 'setTime', 
