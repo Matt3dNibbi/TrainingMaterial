@@ -6,6 +6,7 @@
 import math, random
 from PySide import QtGui, QtCore
 
+from FabricEngine.CreationPlatform.Nodes.Importers.AlembicImporterImpl import AlembicImporter
 from FabricEngine.CreationPlatform.PySide import *
 from FabricEngine.CreationPlatform.Nodes.Rendering import *
 
@@ -14,7 +15,7 @@ import Float64WidgetImpl
 
 
 
-class MandelBrotViewerApp(Basic3DDemoApplication):
+class MandelBrotViewerApp(CreationPlatformApplication):
   
   def __init__(self):
     super(MandelBrotViewerApp, self).__init__(
@@ -30,15 +31,8 @@ class MandelBrotViewerApp(Basic3DDemoApplication):
 
     # query the constructed components
     scene = self.getScene()
-    viewport = self.getViewport()
-    standardShadersGroup = scene.getNode('StandardShaders')
-    light = scene.getNode('CameraLight')
 
-    phong = Material(scene,
-      xmlFile='Standard/PhongTextured',
-      shaderGroup=standardShadersGroup,
-      light=light
-    )
+    phong = Material(scene, xmlFile='PhongTexturedMaterial')
     
     self.constructionCompleted()
 
