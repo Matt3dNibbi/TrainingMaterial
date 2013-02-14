@@ -6,11 +6,15 @@
 
 import FabricEngine.CreationPlatform
 from Complex64 import Complex64
-from FabricEngine.CreationPlatform.Nodes.Images.Image2DImpl import Image2D
+from FabricEngine.CreationPlatform.Nodes.Images.BaseImageImpl import BaseImage
 from FabricEngine.CreationPlatform.Nodes.Animation.TimeImpl import Time
 
-class MandelbrotImage(Image2D):
+class MandelbrotImage(BaseImage):
   
+  @classmethod
+  def displayInNodeLibrary(cls):
+    return True
+
   def __init__(self, scene, **options):
 
     ###########################################
@@ -18,53 +22,44 @@ class MandelbrotImage(Image2D):
 
     options.setdefault('width', 640)
     options.setdefault('height', 480)
-    options.setdefault('format', 'RGB')
     options.setdefault('createSlicedDGNode', True)
     options.setdefault('forceRefresh', True)
+    options['format'] = 'RGB'
 
     super(MandelbrotImage, self).__init__(scene, **options)
 
     ###########################################
     # 2.0 Setup the parameters for the madelbrot set.
-    imageAttributesDGNode = self.getAttributesDGNode()
+    dgnode = self.getDGNode()
+    dgnode.addMember('width', 'UInt32', options.setdefault('width', 640))
+    dgnode.addMember('height', 'UInt32', options.setdefault('height', 480))
+    self._addMemberInterface(dgnode, 'width', True)
+    self._addMemberInterface(dgnode, 'height', True)
 
-    imageAttributesDGNode.addMember("center", "Complex64", Complex64(0.0, 0.0))
-    imageAttributesDGNode.addMember("zoom", "Float64", 1.0)
-    imageAttributesDGNode.addMember("maxIterations", "Size", 1536)
-    
-    self._addMemberInterface(imageAttributesDGNode, 'center', True)
-    self._addMemberInterface(imageAttributesDGNode, 'zoom', True)
-    self._addMemberInterface(imageAttributesDGNode, 'maxIterations', True)
+
+    dgnode.addMember("center", "Complex64", Complex64(0.0, 0.0))
+    dgnode.addMember("zoom", "Float64", 1.0)
+    dgnode.addMember("maxIterations", "Size", 1536)
+    self._addMemberInterface(dgnode, 'center', True)
+    self._addMemberInterface(dgnode, 'zoom', True)
+    self._addMemberInterface(dgnode, 'maxIterations', True)
 
     ###########################################
-    # 3.0 Setup the pixels node. 
-    pixelsDGNode = self.getPixelsDGNode()
-    pixelsDGNode.setDependency(imageAttributesDGNode, 'parameters')
+    # 3.0 Compile and bind the operator
 
-    self.bindDGOperator(pixelsDGNode.bindings,
-      name = 'resizeNode', 
+    self.bindDGOperator(dgnode.bindings,
+      name = 'computePixels', 
       fileName = FabricEngine.CreationPlatform.buildAbsolutePath('Mandelbrot.kl'),
       layout = [
-        'self',
-        'attributes.width',
-        'attributes.height',
+        'self.width',
+        'self.height',
+        'self.image',
+        'self.center',
+        'self.zoom',
+        'self.maxIterations'
       ]
     )
 
-    self.bindDGOperator(pixelsDGNode.bindings,
-      name = 'generateMandelbrot', 
-      fileName = FabricEngine.CreationPlatform.buildAbsolutePath('Mandelbrot.kl'),
-      layout = [
-        'self.pixels',
-        'attributes.center',
-        'attributes.zoom',
-        'attributes.maxIterations',
-        'self.index',
-        'attributes.width',
-        'attributes.height',
-      ]
-    )
-    
     ###########################################
     # 4.0 Setup time reference
 
@@ -72,13 +67,13 @@ class MandelbrotImage(Image2D):
     def __changeTimeNode(data):
       if data['prevNode'] is not None and data['node'] is None:
         if self.__timeOpBindings is not None:
-          self.removeDGOperatorBinding(imageAttributesDGNode.bindings, self.__timeOpBindings)
+          self.removeDGOperatorBinding(dgnode.bindings, self.__timeOpBindings)
           
-        imageAttributesDGNode.removeDependency('time')
+        dgnode.removeDependency('time')
       if data['node'] is not None:
-        imageAttributesDGNode.setDependency(data['node'].getDGNode(), 'time')
-
-        self.__timeOpBindings = self.bindDGOperator(imageAttributesDGNode.bindings,
+        dgnode.setDependency(data['node'].getDGNode(), 'time')
+      
+        self.__timeOpBindings = self.bindDGOperator(dgnode.bindings,
           name = 'setTime', 
           sourceCode = 'operator setTime(Scalar time, io Float64 zoom){ zoom = 1.0 + time; }',
           layout = [
