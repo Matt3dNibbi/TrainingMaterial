@@ -2,19 +2,14 @@ from FabricEngine.CreationPlatform.RT.Math import *
 from FabricEngine.CreationPlatform.RT.BaseImpl import Base
 from FabricEngine.CreationPlatform import iif
 from PySide import QtGui, QtCore
-from FabricEngine.CreationPlatform.PySide.Widgets.RT.RegisteredTypeWidgetImpl import RegisteredTypeWidget
+from FabricEngine.CreationPlatform.PySide.Widgets.Parameters.ParameterWidgetImpl import ParameterWidget
 
-# Define a custom type for representing Complex numbers with real and imaginary components
 class Complex64(Base):
-  
-  re = None
-  im = None
   
   def __init__(self, re = None, im = None):
     self.re = iif(re is None, 0.0, re)
     self.im = iif(im is None, 0.0, im)
 
-Complex64.registerRT('Complex64')
 FabricEngine.CreationPlatform.RT.registerType('Complex64', {
   'members' : [
     { 're' : 'Float64' },
@@ -26,13 +21,11 @@ FabricEngine.CreationPlatform.RT.registerType('Complex64', {
   }
 })
 
-# Define a custom widget for displaying Complex64 values. 
-class Complex64Widget(QtGui.QWidget, RegisteredTypeWidget):
-  def __init__(self, **options):
-    
-    options['setWidgetValue'] = False
-    QtGui.QWidget.__init__(self, options.setdefault('parentWidget', None))
-    RegisteredTypeWidget.__init__(self, **options)
+
+class Complex64Widget(ParameterWidget):
+
+  def __init__(self, parameter, index = 0, addEventListener = True, parentWidget=None):
+    super(Complex64Widget, self).__init__(parameter, index = index, addEventListener = addEventListener, parentWidget=parentWidget)
     
     def defineLineEditSubWidget():
       widget = QtGui.QLineEdit(self)
@@ -53,15 +46,11 @@ class Complex64Widget(QtGui.QWidget, RegisteredTypeWidget):
     self.setLayout(layout)
     self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
     
-    self.setWidgetValue(options['getter']())
+    self.updateWidgetValue()
     
     if self._hasSetter():
       self.__editReWidget.editingFinished.connect(self._invokeSetter)
       self.__editImWidget.editingFinished.connect(self._invokeSetter)
-  
-  @staticmethod
-  def getRTName():
-    return "Complex64"
   
   def getWidgetValue(self):
     return Complex64(float(self.__editReWidget.text()), float(self.__editImWidget.text())) 
@@ -70,4 +59,9 @@ class Complex64Widget(QtGui.QWidget, RegisteredTypeWidget):
     self.__editReWidget.setText(str(value.re))
     self.__editImWidget.setText(str(value.im))
 
-RegisteredTypeWidget.registerRTWidget(Complex64Widget)
+  @classmethod
+  def canDisplay(self, parameter):
+    return parameter.getType() == "Complex64"
+    
+
+Complex64Widget.registerParameterWidget()

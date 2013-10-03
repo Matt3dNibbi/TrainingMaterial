@@ -1,6 +1,6 @@
 
  
-function computeDataElement(Size index, Scalar time, io Scalar data[])
+operator computeDataElement(Size index, Scalar time, io Scalar data[])
 {
   data[index] += sin(time + (Scalar(index) * 0.1));
   report(index + ":" + data[index]);
@@ -13,6 +13,6 @@ operator computeDataOp(
   io Scalar data[])
 {
   data.resize(valueCount);
-  executeParallel( computeDataElement, valueCount, time, data );
+  computeDataElement<<<valueCount>>>( time, data );
 }
 

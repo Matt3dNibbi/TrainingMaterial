@@ -1,28 +1,24 @@
-
-
 // Mandelbrot set computations
 // See http://en.wikipedia.org/wiki/Mandelbrot_set
 
-use RGB, Complex64;
+require RGB, Complex64;
+require Image2DRGB;
 
-operator generateMandelbrot(
-  io RGB pixel,
+operator computePixel(Index index, 
+  io Image2DRGB image,
   Complex64 center,
   Float64 zoom,
-  Size maxIterations,
-  Index index,
-  Size cols,
-  Size rows
+  Size maxIterations
   )
 {
-  Index row = index / cols;
-  Index col = index % cols;
+  Index row = index / image.width;
+  Index col = index % image.width;
   
   Float64 width = 4.0 / zoom;
-  Float64 height = width / cols * rows;
+  Float64 height = width / image.width * image.height;
   Complex64 c(
-    center.re - width/2 + Float64(col) / Float64(cols - 1) * width,
-    center.im - height/2 + Float64(row) / Float64(rows - 1) * height,
+    center.re - width/2 + Float64(col) / Float64(image.width - 1) * width,
+    center.im - height/2 + Float64(row) / Float64(image.height - 1) * height,
     );
   
   Size dwell = 0;
@@ -42,24 +38,34 @@ operator generateMandelbrot(
   }
   
   if (dwell == maxIterations)
-    pixel = RGB(0, 0, 0);
+    image.setPixel(col, row, RGB(0, 0, 0));
   else
   {
     Byte shade = dwell % 128 + 128;
     Byte offset = ~((dwell / 128) % 7);
-    pixel = RGB(
-      offset & 1? shade: 0,
-      offset & 2? shade: 0,
-      offset & 4? shade: 0
-      );
+    image.setPixel(col, row, RGB(
+      offset&1 ? shade : 0,
+      offset&2 ? shade : 0,
+      offset&4 ? shade : 0
+      ));
   }
 }
 
-
-operator resizeNode(
-  io Container self, 
-  Size width,
-  Size height
-) {
-  self.resize( width * height );
+operator computePixels(
+  Size width, 
+  Size height, 
+  io Image2DRGB image,
+  Complex64 center,
+  Float64 zoom,
+  Size maxIterations
+){
+  image.resize(width, height);
+  computePixel<<<image.pixels.size()>>>(
+    image,
+    center,
+    zoom,
+    maxIterations
+  );
+  image.incrementVersion();
 }
+
