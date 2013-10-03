@@ -6,6 +6,7 @@
 import math, random
 from PySide import QtGui, QtCore
 
+
 from FabricEngine.CreationPlatform.Nodes.Rendering import *
 from FabricEngine.CreationPlatform.Nodes.Images import *
 from FabricEngine.CreationPlatform.Nodes.Importers.AlembicImporterImpl import AlembicImporter
@@ -40,7 +41,7 @@ class MandelBrotViewerApp(CreationPlatformApplication):
     scene = self.getScene()
     viewport = self.getViewport()
 
-    # phongTexturedMaterial = Material(scene, xmlFile='PhongTexturedMaterial')
+    phongTexturedMaterial = Material(scene, xmlFile='PhongTexturedMaterial')
     
     self.constructionCompleted()
 

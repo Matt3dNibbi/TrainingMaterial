@@ -1,0 +1,27 @@
+
+operator resizeOp(
+  io Container self,
+  Container values
+) {
+  self.resize(values.size());
+}
+
+operator addOp(
+  Index index,
+  Scalar a<>,
+  Scalar b<>,
+  io Scalar result
+) {
+  result = a[index] + b[index];
+  report("Added "+a[index]+" and "+b[index]+" to "+result);
+}
+
+operator mulOp(
+  Index index,
+  Scalar a<>,
+  Scalar b<>,
+  io Scalar result
+) {
+  result = a[index] * b[index];
+  report("Multiplied "+a[index]+" and "+b[index]+" to "+result);
+}

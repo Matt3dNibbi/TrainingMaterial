@@ -1,6 +1,7 @@
 // Mandelbrot set computations
 // See http://en.wikipedia.org/wiki/Mandelbrot_set
 
+
 require RGB, Complex64;
 require Image2DRGB;
 

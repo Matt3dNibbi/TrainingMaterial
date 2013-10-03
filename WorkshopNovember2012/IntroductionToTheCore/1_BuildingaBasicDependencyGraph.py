@@ -15,7 +15,7 @@ timerNode.addMember('time', 'Scalar', 0)
 valuesDGNode = fabricClient.DG.createNode('data')
 valuesDGNode.addMember('values', 'Scalar[]')
 valuesDGNode.addMember('valueCount', 'Integer', 100)
-valuesDGNode.setDependency(timerNode, 'timer')
+valuesDGNode.setDependency('timer', timerNode)
 
 
 # The operator that will create our particles

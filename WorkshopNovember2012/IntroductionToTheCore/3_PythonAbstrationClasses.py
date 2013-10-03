@@ -82,7 +82,7 @@ class DataCalculator(object):
   def setTimerNode(self, timerNode):
     # Create a relatonship between the TimerNode and the DataCalculator, 
     # so the timeer can update the calculator when the time value changes.
-    self.__valuesDGNode.setDependency(timerNode.getDGNode(), 'timer')
+    self.__valuesDGNode.setDependency('timer', timerNode.getDGNode())
     timerNode.addDependent(self)
 
   def evaluate(self):

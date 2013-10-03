@@ -7,17 +7,11 @@
 import FabricEngine.CreationPlatform
 from Complex64 import Complex64
 from FabricEngine.CreationPlatform.RT.Math import *
-from FabricEngine.CreationPlatform.Nodes.Images import *
+from FabricEngine.CreationPlatform.Nodes.Images.BaseImageImpl import BaseImage
 from FabricEngine.CreationPlatform.Nodes.Animation.TimeImpl import Time
-
 
 class MandelbrotImage(BaseImage):
   
-  @classmethod
-  def getNodeColor(cls):
-    """Returns the color to use for the UI elements for this node"""
-    return Color(134, 209, 255)
-
   @classmethod
   def displayInNodeLibrary(cls):
     return True
@@ -62,7 +56,6 @@ class MandelbrotImage(BaseImage):
       ]
     )
 
-
     ###########################################
     # 4.0 Setup time reference
 
@@ -76,7 +69,6 @@ class MandelbrotImage(BaseImage):
         dgnode.removeDependency('time')
       if data['node'] is not None:
         dgnode.setDependency('time', data['node'].getDGNode())
-
         self.__timeOpBindings = self.bindDGOperator(dgnode.bindings,
           name = 'setTime', 
           sourceCode = 'operator setTime(Scalar time, io Float64 zoom){ zoom = 1.0 + time; }',

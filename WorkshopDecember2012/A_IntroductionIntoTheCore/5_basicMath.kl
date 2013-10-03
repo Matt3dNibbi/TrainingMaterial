@@ -1,0 +1,40 @@
+
+operator addOp(
+  Index index,
+  Scalar a<>,
+  Scalar b<>,
+  io Scalar result<>
+) {
+  result[index] = a[index] + b[index];
+  report("Added "+a[index]+" and "+b[index]+" to "+result[index]);
+}
+
+operator mulOp(
+  Index index,
+  Scalar a<>,
+  Scalar b<>,
+  io Scalar result<>
+) {
+  result[index] = a[index] * b[index];
+  report("Multiplied "+a[index]+" and "+b[index]+" to "+result[index]);
+}
+
+operator computeOp(
+  io Container self,
+  Container values,
+  Scalar a<>,
+  Scalar b<>,
+  io Scalar product<>,
+  io Scalar sum<>
+) {
+  Size count = values.size();
+  self.resize(count);
+
+  // add all values in parallel
+  executeParallel(addOp, count, a, b, sum);
+
+  report("I am single threaded.");
+
+  // multiply all values in parallel
+  executeParallel(mulOp, count, a, b, product);
+}
