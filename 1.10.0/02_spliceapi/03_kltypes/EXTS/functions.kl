@@ -1,0 +1,4 @@
+
+function myFunction(String text) {
+  report("MyExt says: "+text);
+}

@@ -1,0 +1,10 @@
+{
+  "libs": [
+  	"RapidXml"
+  ],
+  "code": [
+  	"RapidXmlDoc.kl",
+  	"RapidXmlNode.kl",
+  	"RapidXmlAttr.kl"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "libs": [
+  	"SimpleExtension"
+  ],
+  "code": [
+  	"SimpleExtension.kl"
+  ]
+}

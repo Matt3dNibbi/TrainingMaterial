@@ -1,0 +1,13 @@
+
+struct RapidXmlNode {
+  Data data;
+};
+
+function RapidXmlNode(RapidXmlNode other) = "RapidXmlNode_Copy";
+function RapidXmlNode.=(RapidXmlNode other) = "RapidXmlNode_Copy";
+function ~RapidXmlNode() = "RapidXmlNode_Destruct";
+function Boolean RapidXmlNode.valid() = "RapidXmlNode_Valid";
+function String RapidXmlNode.name() = "RapidXmlNode_Name";
+function RapidXmlNode RapidXmlNode.nextSibling() = "RapidXmlNode_NextSibling";
+function RapidXmlNode RapidXmlNode.firstChild() = "RapidXmlNode_FirstChild";
+function RapidXmlAttr RapidXmlNode.firstAttr() = "RapidXmlNode_FirstAttr";

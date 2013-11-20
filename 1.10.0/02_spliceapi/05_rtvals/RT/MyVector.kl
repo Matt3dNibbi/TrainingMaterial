@@ -1,0 +1,18 @@
+
+struct MyVector {
+  Scalar x;
+  Scalar y;
+};
+
+function MyVector() {
+  this.x = this.y = 0.0;
+}
+
+function Scalar MyVector.length() {
+  return sqrt(this.x * this.x + this.y + this.y);
+}
+
+function MyVector.dump() {
+  report("x is "+this.x);
+  report("y is "+this.y);
+}

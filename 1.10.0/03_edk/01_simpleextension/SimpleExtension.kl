@@ -1,0 +1,2 @@
+
+function SimplePrintf(in String message) = "SimpleExtension_SimplePrintf";

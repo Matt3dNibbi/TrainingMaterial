@@ -1,0 +1,9 @@
+
+struct OpaqueType {
+  Data data;
+};
+
+function OpaqueType() = "OpaqueType_Construct";
+function OpaqueType(OpaqueType other) = "OpaqueType_Copy";
+function OpaqueType.=(OpaqueType other) = "OpaqueType_Copy";
+function ~OpaqueType() = "OpaqueType_Destruct";

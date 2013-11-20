@@ -1,0 +1,12 @@
+
+struct MyMathTool {
+  String name;
+};
+
+operator MyMathTool_sqrt_task<<<index>>>(io Float32 values<>) {
+  values[index] = sqrt(index);
+}
+
+function MyMathTool.sqrtPEX(io Float32 values<>) {
+  MyMathTool_sqrt_task<<<values.size()>>>(values);
+}

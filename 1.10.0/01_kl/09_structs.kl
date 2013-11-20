@@ -1,0 +1,33 @@
+
+  struct Vec2 {
+    Scalar x;
+    Scalar y;
+  };
+
+  function Vec2(Scalar x, Scalar y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  function Scalar Vec2.length() {
+    return sqrt(this.x * this.x + this.y * this.y);
+  }
+
+  function Vec2.setNull() {
+    this.x = this.y = 0.0;
+  }
+
+  function Vec2 + (Vec2 a, Vec2 b) {
+    return Vec2(a.x + b.x, a.y + b.y);
+  }
+
+  operator entry() {
+    Vec2 a(2, 7);
+    report(a);
+    report(a.length());
+
+    Vec2 b(6, 12);
+    report(a + b);
+
+
+  }

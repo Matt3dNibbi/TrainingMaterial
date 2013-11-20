@@ -1,0 +1,8 @@
+{
+  "libs": [
+  	"OpaqueExtension"
+  ],
+  "code": [
+  	"OpaqueExtension.kl"
+  ]
+}

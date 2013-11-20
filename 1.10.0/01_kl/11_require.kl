@@ -1,0 +1,10 @@
+  require Math;
+  require FabricALEMBIC;
+
+  operator entry() {
+
+    Vec3 a(1.0, 1.0, 1.0);
+    Vec3 b(2.0, 3.0, 4.0);
+
+    report(a + b);
+  }

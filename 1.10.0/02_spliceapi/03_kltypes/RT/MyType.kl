@@ -1,0 +1,8 @@
+
+struct MyType {
+  String name;
+};
+
+function MyType(String name) {
+  this.name = name;
+}

@@ -1,0 +1,14 @@
+
+  operator entry() {
+
+    for(Integer i=20;i!=0;i--) {
+      report('i is now '+i);
+    }
+
+    Integer count = 0;
+    while(count < 20) {
+      report(count);
+      count++;
+    }
+
+  }

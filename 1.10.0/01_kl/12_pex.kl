@@ -1,0 +1,17 @@
+
+  operator task<<<index>>>(io Scalar values[]) {
+    values[index] = index * 3;
+    report(values[index]);
+  }
+
+  operator entry() {
+
+    Size count = 128;
+    Scalar values[];
+    values.resize(count);
+
+    task<<<count>>>(values);
+
+    //report(values);
+
+  }

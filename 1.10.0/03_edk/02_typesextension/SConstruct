@@ -1,0 +1,40 @@
+import os
+
+
+#---------------------------------------------------------
+extEnv = Environment()
+
+buildOS = 'Windows'
+buildArch = 'x86_64'
+
+extEnv.Append(CPPPATH = [os.path.join(os.environ['FABRIC_EDK_DIR'], 'include')])
+
+extFiles = []
+extFiles += Glob('*.kl')
+extFiles += Glob('*.json')
+
+edkLibrary = extEnv.SharedLibrary('TypesExtension'+'-'+buildOS+'-'+buildArch, Glob('TypesExtension.cpp'))
+extFiles += edkLibrary
+
+extAlias = extEnv.Alias('ext', extFiles)
+
+#---------------------------------------------------------
+
+testEnv = Environment()
+
+testEnv.Append(CPPPATH = [os.environ['FABRICSPLICE_API_DIR']])
+testEnv.Append(LIBPATH = [os.environ['FABRICSPLICE_API_DIR']])
+testEnv.Append(CPPDEFINES = ['FEC_STATIC', 'FECS_STATIC'])
+
+# standard windows libraries
+testEnv.Append(LIBS = ['user32', 'advapi32', 'gdi32', 'shell32', 'ws2_32', 'Opengl32', 'glu32'])
+
+# Fabric Engine libraries
+testEnv.Append(LIBS = ['FabricCore-1.10_s', 'FabricSplice-1.10.0_ss'])
+
+testProgram = testEnv.Program('test', Glob('test.cpp'))
+testAlias = testEnv.Alias('test', testProgram)
+
+#---------------------------------------------------------
+
+Alias('all', [extAlias, testAlias])

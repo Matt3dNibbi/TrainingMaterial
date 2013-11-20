@@ -1,0 +1,31 @@
+
+  operator entry() {
+    String fourNames[4];
+    fourNames[0] = 'a';
+    fourNames[1] = 'b';
+    fourNames[2] = 'c';
+    fourNames[3] = 'd';
+
+    String aCoupleOfNames[];
+    report(aCoupleOfNames.size());
+
+    aCoupleOfNames.push('a');
+    aCoupleOfNames.push('b');
+    aCoupleOfNames.push('c');
+    aCoupleOfNames.push('d');
+    report(aCoupleOfNames);
+
+    report(aCoupleOfNames[17]);
+
+    aCoupleOfNames.resize(2);
+    report(aCoupleOfNames);
+
+    aCoupleOfNames.push('d');
+    report(aCoupleOfNames);
+
+    String otherNames[];
+    otherNames = aCoupleOfNames.clone();
+    otherNames.push('e');
+    otherNames.push('f');
+    report(aCoupleOfNames);
+  }

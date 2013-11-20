@@ -1,0 +1,36 @@
+
+  operator entry() {
+
+    Integer myNumber = 12;
+
+    if(myNumber < 12) {
+      report('(if else) less than 12.');
+    } else if(myNumber > 12) {
+      report('(if else) greater than 12.');
+    } else {
+      report('(if else) exactly 12.');
+    }
+
+    switch(myNumber) {
+      case 10:
+      {
+        report('(switch) is exactly 10.');
+        break;
+      }
+      case 11:
+      {
+        report('(switch) is exactly 11.');
+        break;
+      }
+      case 12:
+      {
+        report('(switch) is exactly 12.');
+        break;
+      }
+      default:
+      {
+        report('(switch) not handled.');
+      }
+    }
+
+  }

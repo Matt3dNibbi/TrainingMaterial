@@ -1,0 +1,20 @@
+
+
+  operator entry() {
+
+    // define some variables
+    Boolean flag = true;
+    Integer intA = 12;
+    Integer intB = 7;
+    Scalar sA = 4.7;
+    Scalar sB = 12.3;
+    String nameA = 'Helge';
+    String nameB = 'Claudia';
+
+    report(flag && true); // returns true
+    report(flag || false); // returns true
+    report(!flag); // returns false
+    report(intA + intB);
+    report(sA * sB);
+    report(nameA + ' met ' + nameB);
+  }

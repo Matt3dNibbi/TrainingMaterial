@@ -1,0 +1,31 @@
+
+  object Settings {
+    Scalar values[String];
+  };
+
+  function Settings.storeValue(String key, Scalar value) {
+    this.values[key] = value;
+  }
+
+  function Scalar Settings.restoreValue(String key) {
+    if(this.values.has(key))
+      return this.values[key];
+    return -1.0;
+  }
+
+
+  operator entry() {
+    Settings s;
+    if(s == null)
+      s = Settings();
+    report(s);
+
+    s.storeValue('width', 8.0);
+    s.storeValue('length', 6.0);
+
+    report(s.restoreValue('height'));
+
+    Settings t = s;
+    t.storeValue('height', 4.0);
+    report(s.restoreValue('height'));
+  }

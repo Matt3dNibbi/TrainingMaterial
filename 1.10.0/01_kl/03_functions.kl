@@ -1,0 +1,21 @@
+
+  function sayMessage(String message, io Integer messageCount) {
+    report('Saying: '+message);
+    messageCount++;
+  }
+
+  function String prefixMessage(String message) {
+    String result;
+    result = '[KL] '+message;
+    return result;
+  }
+
+
+  operator entry() {
+    Integer count = 0;
+    sayMessage(prefixMessage('Hello World!'), count);
+    sayMessage(prefixMessage('I love this language!'), count);
+    sayMessage(prefixMessage('Very much!'), count);
+
+    report(count);
+  }
