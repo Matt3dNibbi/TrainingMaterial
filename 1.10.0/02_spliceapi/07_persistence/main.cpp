@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-int main(int argc, const char * argv) 
+int main(int argc, const char * argv[]) 
 {
   FabricSplice::Initialize();
 

@@ -19,7 +19,7 @@ void createMyRuntimeType(const FabricCore::Variant & dataDict, char ** klCode)
   memcpy(*klCode, code.c_str(), code.length());  
 }
 
-int main(int argc, const char * argv) 
+int main(int argc, const char * argv[]) 
 {
   FabricSplice::Initialize();
 
