@@ -5,7 +5,7 @@
 
 using namespace FabricSplice;
 
-int main(int argc, const char * argv) 
+int main(int argc, const char * argv[]) 
 {
   std::string code;
   code += "const Integer myConst = 17;\n";   

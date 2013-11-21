@@ -15,7 +15,7 @@ FabricCore::Variant createMyRuntimeType(const FabricCore::Variant & dataDict)
   return FabricCore::Variant::CreateString(klCode.c_str());
 }
 
-int main(int argc, const char * argv) 
+int main(int argc, const char * argv[]) 
 {
   FabricSplice::Initialize();
 

@@ -17,7 +17,7 @@ void myKLFunc(const char * message, unsigned int length)
   printf("[KL] %s\n", message);
 }
 
-int main(int argc, const char * argv) 
+int main(int argc, const char * argv[]) 
 {
   FabricSplice::Initialize();
 

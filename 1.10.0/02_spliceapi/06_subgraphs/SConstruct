@@ -1,5 +1,4 @@
-import os
-
+import os, sys
 
 env = Environment()
 
@@ -7,10 +6,13 @@ env.Append(CPPPATH = [os.environ['FABRICSPLICE_API_DIR']])
 env.Append(LIBPATH = [os.environ['FABRICSPLICE_API_DIR']])
 env.Append(CPPDEFINES = ['FEC_STATIC', 'FECS_STATIC'])
 
-# standard windows libraries
-env.Append(LIBS = ['user32', 'advapi32', 'gdi32', 'shell32', 'ws2_32', 'Opengl32', 'glu32'])
-
 # Fabric Engine libraries
-env.Append(LIBS = ['FabricCore-1.10_s', 'FabricSplice-1.10.0_ss'])
+env.Append(LIBS = ['FabricSplice-1.10.0_ss', 'FabricCore-1.10_s'])
+
+# standard libraries
+if sys.platform == 'win32':
+  env.Append(LIBS = ['user32', 'advapi32', 'gdi32', 'shell32', 'ws2_32', 'Opengl32', 'glu32'])
+else:
+  env.Append(LIBS = ['X11', 'GLU', 'GL', 'dl', 'pthread'])
 
 p = env.Program('subgraphs', Glob('*.cpp'))
