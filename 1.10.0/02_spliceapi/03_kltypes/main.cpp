@@ -3,16 +3,20 @@
 #include <string>
 
 // a function to provide the MyRuntimeType
-FabricCore::Variant createMyRuntimeType(const FabricCore::Variant & dataDict)
+void createMyRuntimeType(const FabricCore::Variant & dataDict, char ** klCode)
 {
-  std::string klCode;
-  klCode += "struct MyRuntimeType {\n";
-  klCode += "  Scalar myNumber;\n";
-  klCode += "};\n\n";
-  klCode += "function MyRuntimeType.update() {\n";
-  klCode += "  this.myNumber = 17;\n";
-  klCode += "}\n";
-  return FabricCore::Variant::CreateString(klCode.c_str());
+  std::string code;
+  code += "struct MyRuntimeType {\n";
+  code += "  Scalar myNumber;\n";
+  code += "};\n\n";
+  code += "function MyRuntimeType.update() {\n";
+  code += "  this.myNumber = 17;\n";
+  code += "}\n";
+
+  // copy the code out
+  (*klCode) = (char*)malloc(code.length() + 1);
+  (*klCode)[code.length()] = '\0';
+  memcpy(*klCode, code.c_str(), code.length());  
 }
 
 int main(int argc, const char * argv) 
