@@ -33,8 +33,8 @@ class MyApplication(SceneGraphApplication):
     # create the textures node
     textures = Image2DLibrary(scene)
     jpgPaths = glob.glob('*.jpg')
-    for jpgPath in jpgPaths:
-      textures.addImage(jpgPath, jpgPath)
+    for i in range(len(jpgPaths)):
+      textures.addImage('texture'+str(i), jpgPaths[i])
 
     # import all nodes
     nodes = importer.importAsset()
@@ -65,7 +65,8 @@ class MyApplication(SceneGraphApplication):
       """)
 
     # create another custom material
-    material = Material(scene, xmlFile='PhongTexturedMaterial', diffuseTexture=textures)
+    material = Material(scene, xmlFile='PhongTexturedMaterial')
+    material.addPreset(name = 'proceduralPreset0', diffuseTexture = textures)
 
     # add a KL operator to the material to create 20 colors in KL
     # this could be done in python too, but for the sake of proceduralism
@@ -73,30 +74,30 @@ class MyApplication(SceneGraphApplication):
     material.bindDGOperator(
       material.getDGNode('Values').bindings,
       index = 0, # at the beginning of the stack
-      name = 'constructTwentyPhongMaterialPresets',
+      name = 'constructVaryingTexturePresets',
       layout = [
         'self', 
-        'self.diffuseColor<>',
-        'self.presetName<>'
+        'self.presetName<>',
+        'self.textureValues_textureNodeIndex<>',
+        'self.textureValues_textureNodeSlice<>'
       ],
       sourceCode = """
         require Math;
 
-        operator constructTwentyPhongMaterialPresets(
+        operator constructVaryingTexturePresets(
           io Container self, 
-          io Color colors<>, 
-          io String presetName<>
+          io String presetName<>,
+          io Integer textureValues_textureNodeIndex<>[],
+          io Integer textureValues_textureNodeSlice<>[]
         ) {
           // resize the node
           self.resize(20);
 
           // set the values for each
           for(Size i=0;i<self.size();i++) {
-            colors[i].r = mathRandomScalar(12, i);
-            colors[i].g = mathRandomScalar(91, i);
-            colors[i].b = mathRandomScalar(31823, i);
-            colors[i].a = 1.0;
             presetName[i] = 'proceduralPreset'+i;
+            textureValues_textureNodeIndex[i][2] = 0;
+            textureValues_textureNodeSlice[i][2] = i % 4;
           }
         }
       """)
