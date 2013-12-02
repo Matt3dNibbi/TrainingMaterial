@@ -7,16 +7,16 @@ import math, random
 from PySide import QtGui, QtCore
 
 
-from FabricEngine.CreationPlatform.Nodes.Rendering import *
-from FabricEngine.CreationPlatform.Nodes.Images import *
-from FabricEngine.CreationPlatform.Nodes.Importers.AlembicImporterImpl import AlembicImporter
-from FabricEngine.CreationPlatform.PySide import *
+from FabricEngine.SceneGraph.Nodes.Rendering import *
+from FabricEngine.SceneGraph.Nodes.Images import *
+from FabricEngine.SceneGraph.Nodes.Importers.AlembicImporterImpl import AlembicImporter
+from FabricEngine.SceneGraph.PySide import *
 
 
 from MandelbrotImage import MandelbrotImage
 
 
-class MandelBrotViewerApp(CreationPlatformApplication):
+class MandelBrotViewerApp(SceneGraphApplication):
   
   def __init__(self):
     

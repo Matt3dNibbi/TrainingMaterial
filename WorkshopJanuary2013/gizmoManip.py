@@ -1,14 +1,14 @@
 import sys
 import random
-import FabricEngine.CreationPlatform
-from FabricEngine.CreationPlatform.Nodes.Primitives.PolygonMeshCuboidImpl import *
-from FabricEngine.CreationPlatform.Nodes.Rendering.MaterialImpl import *
-from FabricEngine.CreationPlatform.Nodes.Rendering.GeometryInstanceImpl import *
-from FabricEngine.CreationPlatform.Nodes.Kinematics.TransformImpl import *
-from FabricEngine.CreationPlatform.Nodes.Manipulation.GizmoInstanceImpl import *
-from FabricEngine.CreationPlatform.Nodes.Manipulation.GizmoManipulatorImpl import *
-from FabricEngine.CreationPlatform.RT.Math import *
-from FabricEngine.CreationPlatform.PySide.CreationPlatformApplicationImpl import *
+import FabricEngine.SceneGraph
+from FabricEngine.SceneGraph.Nodes.Primitives.PolygonMeshCuboidImpl import *
+from FabricEngine.SceneGraph.Nodes.Rendering.MaterialImpl import *
+from FabricEngine.SceneGraph.Nodes.Rendering.GeometryInstanceImpl import *
+from FabricEngine.SceneGraph.Nodes.Kinematics.TransformImpl import *
+from FabricEngine.SceneGraph.Nodes.Manipulation.GizmoInstanceImpl import *
+from FabricEngine.SceneGraph.Nodes.Manipulation.GizmoManipulatorImpl import *
+from FabricEngine.SceneGraph.RT.Math import *
+from FabricEngine.SceneGraph.PySide.SceneGraphApplicationImpl import *
 
 # any node can become manipulatable, geometries, containers etc
 # you could also perform this modification / specialization using
@@ -50,7 +50,7 @@ class ManipulatableCuboid(PolygonMeshCuboid):
         'self.polygonMesh',
         'self.gizmoPoints'
       ],
-      fileName = FabricEngine.CreationPlatform.buildAbsolutePath('ManipulatableCuboid.kl')
+      fileName = FabricEngine.SceneGraph.buildAbsolutePath('ManipulatableCuboid.kl')
     )
 
     # setup the operator to perform the drawing
@@ -63,7 +63,7 @@ class ManipulatableCuboid(PolygonMeshCuboid):
         'bbox.localBVol<>',
         'self.gizmo<>'
       ],
-      fileName = FabricEngine.CreationPlatform.buildAbsolutePath('ManipulatableCuboid.kl')
+      fileName = FabricEngine.SceneGraph.buildAbsolutePath('ManipulatableCuboid.kl')
     )
 
     # setup private members required for manipulation
@@ -179,7 +179,7 @@ class ManipulatableCuboid(PolygonMeshCuboid):
     self.__gizmoHandler = None
     return True    
 
-class gizmoManipApp(CreationPlatformApplication):
+class gizmoManipApp(SceneGraphApplication):
 
   def __init__(self, **options):
     super(gizmoManipApp, self).__init__(**options)

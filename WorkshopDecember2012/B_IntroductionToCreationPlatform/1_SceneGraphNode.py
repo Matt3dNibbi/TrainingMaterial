@@ -3,8 +3,8 @@
 # Copyright 2010-2012 Fabric Technologies Inc. All rights reserved.
 #
 
-from FabricEngine.CreationPlatform.SceneImpl import Scene
-from FabricEngine.CreationPlatform.Nodes.SceneGraphNodeImpl import SceneGraphNode
+from FabricEngine.SceneGraph.SceneImpl import Scene
+from FabricEngine.SceneGraph.Nodes.SceneGraphNodeImpl import SceneGraphNode
 
 class MyNode(SceneGraphNode):
 

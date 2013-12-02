@@ -5,16 +5,16 @@
 
 from PySide import QtCore
 
-from FabricEngine.CreationPlatform.PySide import *
-from FabricEngine.CreationPlatform.Nodes import *
-from FabricEngine.CreationPlatform.Nodes.Manipulation import *
-from FabricEngine.CreationPlatform.Nodes.Manipulation.GizmoInstanceImpl import *
-from FabricEngine.CreationPlatform.Nodes.Importers.OBJImporterImpl import OBJImporter
-from FabricEngine.CreationPlatform.PySide import *
+from FabricEngine.SceneGraph.PySide import *
+from FabricEngine.SceneGraph.Nodes import *
+from FabricEngine.SceneGraph.Nodes.Manipulation import *
+from FabricEngine.SceneGraph.Nodes.Manipulation.GizmoInstanceImpl import *
+from FabricEngine.SceneGraph.Nodes.Importers.OBJImporterImpl import OBJImporter
+from FabricEngine.SceneGraph.PySide import *
 from BezierDeformComponentImpl import BezierDeformComponent
 from BezierGizmoComponentImpl import BezierGizmoComponent
 
-class MyDeformerApp(CreationPlatformApplication):
+class MyDeformerApp(SceneGraphApplication):
 
   def __init__(self, **options):
     options.setdefault('enableRaycasting', True)

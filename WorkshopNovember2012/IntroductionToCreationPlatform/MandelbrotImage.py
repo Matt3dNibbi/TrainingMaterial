@@ -4,11 +4,11 @@
 #
 
 
-import FabricEngine.CreationPlatform
+import FabricEngine.SceneGraph
 from Complex64 import Complex64
-from FabricEngine.CreationPlatform.RT.Math import *
-from FabricEngine.CreationPlatform.Nodes.Images.BaseImageImpl import BaseImage
-from FabricEngine.CreationPlatform.Nodes.Animation.TimeImpl import Time
+from FabricEngine.SceneGraph.RT.Math import *
+from FabricEngine.SceneGraph.Nodes.Images.BaseImageImpl import BaseImage
+from FabricEngine.SceneGraph.Nodes.Animation.TimeImpl import Time
 
 class MandelbrotImage(BaseImage):
   
@@ -45,7 +45,7 @@ class MandelbrotImage(BaseImage):
 
     self.bindDGOperator(dgnode.bindings,
       name = 'computePixels', 
-      fileName = FabricEngine.CreationPlatform.buildAbsolutePath('Mandelbrot.kl'),
+      fileName = FabricEngine.SceneGraph.buildAbsolutePath('Mandelbrot.kl'),
       layout = [
         'self.width',
         'self.height',

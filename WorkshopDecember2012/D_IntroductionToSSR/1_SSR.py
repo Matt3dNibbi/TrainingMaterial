@@ -7,14 +7,14 @@ import sys
 import copy
 import math
 
-from FabricEngine.CreationPlatform.RT.Math import *
-from FabricEngine.CreationPlatform.Nodes.Rendering import *
-from FabricEngine.CreationPlatform.Nodes.Lights import *
-from FabricEngine.CreationPlatform.Nodes.Images import *
-from FabricEngine.CreationPlatform.Nodes.Manipulation import *
-from FabricEngine.CreationPlatform.Nodes.Kinematics import *
-from FabricEngine.CreationPlatform.Nodes.Importers import *
-from FabricEngine.CreationPlatform.ServerSide.ServerSideApplicationImpl import *
+from FabricEngine.SceneGraph.RT.Math import *
+from FabricEngine.SceneGraph.Nodes.Rendering import *
+from FabricEngine.SceneGraph.Nodes.Lights import *
+from FabricEngine.SceneGraph.Nodes.Images import *
+from FabricEngine.SceneGraph.Nodes.Manipulation import *
+from FabricEngine.SceneGraph.Nodes.Kinematics import *
+from FabricEngine.SceneGraph.Nodes.Importers import *
+from FabricEngine.SceneGraph.ServerSide.ServerSideApplicationImpl import *
 from BezierDeformComponentImpl import BezierDeformComponent
 from BezierGizmoComponentImpl import BezierGizmoComponent
     

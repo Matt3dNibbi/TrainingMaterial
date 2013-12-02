@@ -71,6 +71,10 @@ node.setData( 'vec2_2', 0, newVec3_2 )
 operator = fabricClient.DG.createOperator('addVec2')
 operator.setEntryPoint('addVec2')
 operator.setSourceCode(open('vec2Add.kl').read())
+if operator.getErrors() > 0:
+  diagnostics = operator.getDiagnostics()
+  for diagnostic in operator.getDiagnostics():
+    print diagnostic
 
 # We instanciate a Binding object. It will glue the data with the operator.
 binding = fabricClient.DG.createBinding()

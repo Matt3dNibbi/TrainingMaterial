@@ -2,10 +2,10 @@
 #
 # Copyright 2010-2012 Fabric Technologies Inc. All rights reserved.
 #
-from FabricEngine.CreationPlatform import camelCase, buildAbsolutePath
-from FabricEngine.CreationPlatform.RT.Math.Vec3Impl import Vec3
-from FabricEngine.CreationPlatform.Nodes.ComponentImpl import Component
-from FabricEngine.CreationPlatform.Nodes.Geometry.PolygonMeshImpl import PolygonMesh
+from FabricEngine.SceneGraph import camelCase, buildAbsolutePath
+from FabricEngine.SceneGraph.RT.Math.Vec3Impl import Vec3
+from FabricEngine.SceneGraph.Nodes.ComponentImpl import Component
+from FabricEngine.SceneGraph.Nodes.Geometry.PolygonMeshImpl import PolygonMesh
 
 class BezierGizmoComponent(Component):
 

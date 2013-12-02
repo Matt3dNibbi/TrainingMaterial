@@ -5,16 +5,16 @@
 
 from PySide import QtCore
 
-from FabricEngine.CreationPlatform.PySide import *
-from FabricEngine.CreationPlatform.Nodes import *
-from FabricEngine.CreationPlatform.Nodes.Importers import *
-from FabricEngine.CreationPlatform.PySide import *
+from FabricEngine.SceneGraph.PySide import *
+from FabricEngine.SceneGraph.Nodes import *
+from FabricEngine.SceneGraph.Nodes.Importers import *
+from FabricEngine.SceneGraph.PySide import *
 from BezierDeformComponentImpl import BezierDeformComponent
 from BezierGizmoComponentImpl import BezierGizmoComponent
 
-from FabricEngine.CreationPlatform.PySide.IntegratedApplicationImpl import IntegratedApplication
-from FabricEngine.CreationPlatform.PySide.Widgets.SGNodeInspectorImpl import SGNodeInspector
-from FabricEngine.CreationPlatform.PySide.Widgets.IntegratedWidgetImpl import IntegratedWidget
+from FabricEngine.SceneGraph.PySide.IntegratedApplicationImpl import IntegratedApplication
+from FabricEngine.SceneGraph.PySide.Widgets.SGNodeInspectorImpl import SGNodeInspector
+from FabricEngine.SceneGraph.PySide.Widgets.IntegratedWidgetImpl import IntegratedWidget
 
 class MyDeformerApp(IntegratedApplication):
 

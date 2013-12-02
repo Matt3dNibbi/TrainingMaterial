@@ -1,4 +1,4 @@
-from FabricEngine.CreationPlatform.Nodes.SceneGraphNodeImpl import SceneGraphNode
+from FabricEngine.SceneGraph.Nodes.SceneGraphNodeImpl import SceneGraphNode
 
 class MyValuesNode(SceneGraphNode):
 
