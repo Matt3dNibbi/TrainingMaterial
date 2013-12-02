@@ -3,6 +3,7 @@
 # Copyright 2010-2012 Fabric Technologies Inc. All rights reserved.
 #
 
+import os
 import FabricEngine.Core
 
 fabricClient = FabricEngine.Core.createClient()
@@ -21,7 +22,7 @@ calcNode.setDependency('values', scalarNode)
 # The operator that will resize the node to allocate enough space
 computeOp = fabricClient.DG.createOperator('computeOp')
 computeOp.setEntryPoint('computeOp')
-computeOp.setSourceCode(open('5_basicMath.kl').read())
+computeOp.setSourceCode(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), '5_basicMath.kl')).read())
 
 # We instanciate a Binding object. It will glue the data with the operator.
 computeBinding = fabricClient.DG.createBinding()

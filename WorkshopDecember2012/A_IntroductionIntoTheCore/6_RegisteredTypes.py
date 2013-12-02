@@ -3,6 +3,7 @@
 # Copyright 2010-2012 Fabric Technologies Inc. All rights reserved.
 #
 
+import os
 import os.path
 import FabricEngine.Core
 
@@ -43,7 +44,7 @@ desc = {
   'members': [ { 'x':'Scalar' }, { 'y':'Scalar' }, { 'z':'Scalar' } ],
   'constructor': Vec3,
   'klBindings': {
-    'sourceCode': open('Vec3.kl').read()
+    'sourceCode': open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'Vec3.kl')).read()
   }
 }
 
@@ -71,7 +72,7 @@ calcNode.setDependency('values', vec3Node)
 # The operator that will resize the node to allocate enough space
 computeOp = fabricClient.DG.createOperator('vec3ComputeOp')
 computeOp.setEntryPoint('vec3ComputeOp')
-computeOp.setSourceCode(open('6_vec3Math.kl').read())
+computeOp.setSourceCode(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), '6_vec3Math.kl')).read())
 
 # We instanciate a Binding object. It will glue the data with the operator.
 computeBinding = fabricClient.DG.createBinding()

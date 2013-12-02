@@ -3,6 +3,7 @@
 # Copyright 2010-2012 Fabric Technologies Inc. All rights reserved.
 #
 
+import os
 import FabricEngine.Core
 
 fabricClient = FabricEngine.Core.createClient()
@@ -21,7 +22,7 @@ calcNode.setDependency('values', scalarNode)
 # The operator that will perform our computation
 addOp = fabricClient.DG.createOperator('addOp')
 addOp.setEntryPoint('addOp')
-addOp.setSourceCode(open('3_basicMath.kl').read())
+addOp.setSourceCode(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), '3_basicMath.kl')).read())
 
 # We instanciate a Binding object. It will glue the data with the operator.
 addBinding = fabricClient.DG.createBinding()
@@ -35,7 +36,7 @@ addBinding.setParameterLayout([
 # The operator that will perform our computation
 mulOp = fabricClient.DG.createOperator('mulOp')
 mulOp.setEntryPoint('mulOp')
-mulOp.setSourceCode(open('3_basicMath.kl').read())
+mulOp.setSourceCode(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), '3_basicMath.kl')).read())
 
 # We instanciate a Binding object. It will glue the data with the operator.
 mulBinding = fabricClient.DG.createBinding()

@@ -2,7 +2,7 @@
 #
 # Copyright 2010-2012 Fabric Technologies Inc. All rights reserved.
 #
-
+import os
 import FabricEngine.Core
 
 fabricClient = FabricEngine.Core.createClient()
@@ -16,7 +16,7 @@ scalarNode.addMember('result', 'Scalar')
 # The operator that will perform our computation
 addOp = fabricClient.DG.createOperator('myAddOp')
 addOp.setEntryPoint('addOp')
-addOp.setSourceCode(open('1_basicMath.kl').read())
+addOp.setSourceCode(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), '1_basicMath.kl')).read())
 
 # We instanciate a Binding object. It will glue the data with the operator.
 binding = fabricClient.DG.createBinding()

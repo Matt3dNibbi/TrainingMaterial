@@ -31,10 +31,10 @@ operator computeOp(
   self.resize(count);
 
   // add all values in parallel
-  executeParallel(addOp, count, a, b, sum);
+  addOp<<<count>>>(a, b, sum);
 
   report("I am single threaded.");
 
   // multiply all values in parallel
-  executeParallel(mulOp, count, a, b, product);
+  mulOp<<<count>>>(a, b, product);
 }
