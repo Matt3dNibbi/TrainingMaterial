@@ -46,7 +46,6 @@ class ManipulatableCuboid(PolygonMeshCuboid):
     self.bindDGOperator(geometryDGNode.bindings,
       name = 'deformManipulatableCuboid',
       layout = [
-        'self.attributes',
         'self.polygonMesh',
         'self.gizmoPoints'
       ],
@@ -86,7 +85,7 @@ class ManipulatableCuboid(PolygonMeshCuboid):
     hitData = event['hitData']
 
     # get the transform of the camera
-    camXfo = event['viewport'].getCameraNode().getTransformNode().getGlobalXfo()
+    camXfo = event['viewport'].getInPort('Camera').getConnectedNode().getInPort('Transform').getConnectedNode().getParameter('globalXfo').getValue()
 
     # store private members
     self.__gizmoHandler = hitData.gizmoHandler
@@ -184,8 +183,15 @@ class gizmoManipApp(SceneGraphApplication):
   def __init__(self, **options):
     super(gizmoManipApp, self).__init__(**options)
     
+    # Setup Application Services. 
+    self.setupUndoRedo()
+
+    self.setupViewports()
+    self.setupSunlight()
+    self.setupCamera()
+    self.setupGrid(gridSize = 25.0)
+
     scene = self.getScene()
-    camera = self.getCamera()
 
     # setup the new node with a gizmo
     cuboid = ManipulatableCuboid(scene)
@@ -218,7 +224,7 @@ class gizmoManipApp(SceneGraphApplication):
 
     # setup the manipulator to be a child of the camera, so they both
     # can be active at the same time
-    self.getCameraManipulator().setChildManipulatorNode(manipulator)
+    self.getCameraManipulator().getInPort('ChildManipulator').setConnectedNode(manipulator)
 
     # mark the application as constructed, show the app on scree
     self.constructionCompleted()

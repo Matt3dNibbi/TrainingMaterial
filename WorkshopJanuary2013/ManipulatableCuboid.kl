@@ -1,35 +1,26 @@
-use Xfo;
-use GizmoType;
-use GeometryAttributesRT;
-use PolygonMeshRT;
+require Math;
+require GizmoType;
+require Geometry;
 
 operator deformManipulatableCuboid(
-  io GeometryAttributes attributes,
   io PolygonMesh mesh,
   io Vec3 gizmoPoints[]
 ) {
-  if(!attributes.has('positions'))
-    return;
-
-  if(gizmoPoints.size() != mesh.nbPoints()) {
+  if(gizmoPoints.size() != mesh.pointCount()) {
 
   // if the gizmoPoints are not set yet, initialize them
-    gizmoPoints.resize(mesh.nbPoints());
+    gizmoPoints.resize(mesh.pointCount());
     for(Size i=0; i<gizmoPoints.size(); i++)
-      gizmoPoints[i] = mesh.pointGetPos(attributes, i);
+      gizmoPoints[i] = mesh.getPointPosition(i);
 
   } else {
 
     // copy the gizmo positions back into the attributes
     for(Size offset=0, i=0; i<gizmoPoints.size(); i++)
-      mesh.pointSetPos(attributes, i, gizmoPoints[i]);
-
-    // increase the version to re-upload to the GPU
-    AttributeKey positionsKey = attributes.getKey('positions');
-    attributes.scalarAttributes[positionsKey.index].incrementVersion();
+      mesh.setPointPosition(i, gizmoPoints[i]);
 
     // compute the normals as well
-    mesh.computeNormals(attributes);
+    mesh.recomputePointNormals();
   }
 }
 
