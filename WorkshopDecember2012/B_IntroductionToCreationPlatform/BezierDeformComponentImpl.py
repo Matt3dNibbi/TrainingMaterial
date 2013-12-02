@@ -11,14 +11,20 @@ class BezierDeformComponent(Component):
   
   __prefix = None
 
-  @classmethod
-  def _setDefaultOptions(cls, options):
-    super(BezierDeformComponent, cls)._setDefaultOptions(options)
-    options.setdefault('scale', 0.5)
-    options.setdefault('control1', Vec3(0.0, -8.0, 0.0))
-    options.setdefault('control2', Vec3(0.0, 3.0, -4.0))
-    options.setdefault('control3', Vec3(10.0,  -3.0, 12.0))
-    options.setdefault('control4', Vec3(12.0,  4.0, 2.0))
+  def __init__(self, 
+      scale = 0.5,
+      control1 = Vec3(0.0, -8.0, 0.0),
+      control2 = Vec3(0.0, 3.0, -4.0),
+      control3 = Vec3(10.0,  -3.0, 12.0),
+      control4 = Vec3(12.0,  4.0, 2.0),
+    ):
+    super(BezierDeformComponent, self).__init__()
+    self.__scale = scale
+    self.__control1 = control1
+    self.__control2 = control2
+    self.__control3 = control3
+    self.__control4 = control4
+    
 
   @staticmethod
   def canApplyTo(node):
@@ -38,13 +44,13 @@ class BezierDeformComponent(Component):
 
     # get the core node
     geometryDGNode = node.getGeometryDGNode()
-    geometryDGNode.addMember(prefix+'origins', 'Scalar[]')
-    geometryDGNode.addMember(prefix+'scale', 'Scalar', self._getOption('scale'))
+    geometryDGNode.addMember(prefix+'origins', 'Vec3[]')
+    geometryDGNode.addMember(prefix+'scale', 'Scalar', self.__scale)
     geometryDGNode.addMember(prefix+'yBounds', 'Vec2')
-    geometryDGNode.addMember(prefix+'control1', 'Vec3', self._getOption('control1'))
-    geometryDGNode.addMember(prefix+'control2', 'Vec3', self._getOption('control2'))
-    geometryDGNode.addMember(prefix+'control3', 'Vec3', self._getOption('control3'))
-    geometryDGNode.addMember(prefix+'control4', 'Vec3', self._getOption('control4'))
+    geometryDGNode.addMember(prefix+'control1', 'Vec3', self.__control1)
+    geometryDGNode.addMember(prefix+'control2', 'Vec3', self.__control2)
+    geometryDGNode.addMember(prefix+'control3', 'Vec3', self.__control3)
+    geometryDGNode.addMember(prefix+'control4', 'Vec3', self.__control4)
 
     # add the UI elements
     self._addMemberInterface(geometryDGNode, prefix+'scale', True, label = 'scale')
@@ -59,7 +65,6 @@ class BezierDeformComponent(Component):
       fileName = buildAbsolutePath('BezierDeformComponent.kl'),
       layout = [
         'self.polygonMesh',
-        'self.attributes',
         'self.'+prefix+'origins',
         'self.'+prefix+'yBounds',
         'self.'+prefix+'scale',

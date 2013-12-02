@@ -2,10 +2,8 @@
  *  Copyright 2010-2012 Fabric Engine Inc. All rights reserved.
  */
 
-use Vec3;
-use Xfo;
-use Color;
-use GizmoType;
+require Math;
+require GizmoType;
 
 operator bezierGizmoOp(
   io GizmoType gizmo,

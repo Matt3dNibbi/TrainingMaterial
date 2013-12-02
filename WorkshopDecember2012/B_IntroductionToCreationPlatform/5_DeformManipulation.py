@@ -17,8 +17,15 @@ from BezierGizmoComponentImpl import BezierGizmoComponent
 class MyDeformerApp(SceneGraphApplication):
 
   def __init__(self, **options):
-    options.setdefault('enableRaycasting', True)
     super(MyDeformerApp, self).__init__(**options)
+
+    # Setup Application Services. 
+    self.setupUndoRedo()
+
+    self.setupViewports()
+    self.setupSunlight()
+    self.setupCamera()
+    self.setupGrid(gridSize = 25.0)
 
     scene = self.getScene()
 

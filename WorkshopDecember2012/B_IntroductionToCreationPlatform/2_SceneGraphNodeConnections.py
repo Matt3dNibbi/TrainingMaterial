@@ -8,9 +8,9 @@ from FabricEngine.SceneGraph.Nodes.SceneGraphNodeImpl import SceneGraphNode
 
 class MyValuesNode(SceneGraphNode):
 
-  def __init__(self, scene, **options):
+  def __init__(self, scene, count=11):
 
-    super(MyValuesNode, self).__init__(scene, **options)
+    super(MyValuesNode, self).__init__(scene)
 
     # create a core node
     scalarDGNode = self.constructDGNode('Scalars')
@@ -18,14 +18,13 @@ class MyValuesNode(SceneGraphNode):
     scalarDGNode.addMember('b', 'Scalar', 2.0)
 
     # resize the node for parallel computation
-    count = options.setdefault('count', 100)
     scalarDGNode.resize(count)
 
 class MyResultsNode(SceneGraphNode):
 
-  def __init__(self, scene, **options):
+  def __init__(self, scene):
 
-    super(MyResultsNode, self).__init__(scene, **options)
+    super(MyResultsNode, self).__init__(scene)
 
     # create a core node
     calcDGNode = self.constructDGNode('Calculator')
@@ -33,7 +32,7 @@ class MyResultsNode(SceneGraphNode):
     calcDGNode.addMember('sum', 'Scalar')
 
     # define reference interfaces
-    self.addReferenceInterface('Values', MyValuesNode, False, self.__onConnectValues)
+    self.addInPort('Values', MyValuesNode, self.__onConnectValues)
 
     # private members
     self.__operatorsConstructed = False
@@ -95,7 +94,7 @@ values = MyValuesNode(scene, count = 10)
 results = MyResultsNode(scene)
 
 # connect them through the reference interface
-results.setValuesNode(values)
+results.getInPort('Values').setConnectedNode(values)
 
 # check errors
 scene.checkErrors()

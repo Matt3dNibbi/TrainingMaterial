@@ -16,6 +16,13 @@ class MyDeformerApp(SceneGraphApplication):
   def __init__(self, **options):
     super(MyDeformerApp, self).__init__(**options)
 
+    # Setup Application Services. 
+    self.setupUndoRedo()
+
+    self.setupViewports()
+    self.setupSunlight()
+    self.setupCamera()
+    self.setupGrid(gridSize = 25.0)
     scene = self.getScene()
 
     # import the cube obj file

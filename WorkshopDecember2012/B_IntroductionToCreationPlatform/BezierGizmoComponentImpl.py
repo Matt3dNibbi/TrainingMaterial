@@ -11,6 +11,12 @@ class BezierGizmoComponent(Component):
 
   __prefix = None
   
+  def __init__(self, 
+      deformerComp = None
+    ):
+    super(BezierGizmoComponent, self).__init__()
+    self.__deformerComp = deformerComp
+
   @classmethod
   def _setDefaultOptions(cls, options):
     super(BezierGizmoComponent, cls)._setDefaultOptions(options)
@@ -31,8 +37,7 @@ class BezierGizmoComponent(Component):
   def apply(self, node):
     super(BezierGizmoComponent, self).apply(node)
 
-    deformerComp = self._getOption("deformerComp")
-    if deformerComp is None:
+    if self.__deformerComp is None:
       raise Exception("The option 'deformerComp' is obligatory.")
 
     # construct a prefix
@@ -49,10 +54,10 @@ class BezierGizmoComponent(Component):
       fileName = buildAbsolutePath('BezierGizmoComponent.kl'),
       layout = [
         'self.'+prefix+'gizmo',
-        'self.'+deformerComp.getPrefix()+'control1',
-        'self.'+deformerComp.getPrefix()+'control2',
-        'self.'+deformerComp.getPrefix()+'control3',
-        'self.'+deformerComp.getPrefix()+'control4'
+        'self.'+self.__deformerComp.getPrefix()+'control1',
+        'self.'+self.__deformerComp.getPrefix()+'control2',
+        'self.'+self.__deformerComp.getPrefix()+'control3',
+        'self.'+self.__deformerComp.getPrefix()+'control4'
       ]
     )
 
@@ -98,10 +103,10 @@ class BezierGizmoComponent(Component):
       point = ray.pointFromFactor(factor)
 
       # determine the name of the setter function
-      setterName = camelCase(['set', deformerComp.getPrefix()+'control'+str(self.__gizmoId)])
+      setterName = camelCase(['set', self.__deformerComp.getPrefix()+'control'+str(self.__gizmoId)])
 
       # update the deformer position
-      getattr(deformerComp, setterName)(point)
+      getattr(self.__deformerComp, setterName)(point)
       return True
 
     setattr(node, 'mousePressEvent', mousePressEvent)
