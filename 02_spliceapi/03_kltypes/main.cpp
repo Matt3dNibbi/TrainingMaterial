@@ -24,7 +24,6 @@ int main(int argc, const char * argv[])
   FabricSplice::Initialize();
 
   // define my custom RT and Exts folders
-  FabricSplice::addRTFolder("./RT");
   FabricSplice::addExtFolder("./Exts");
 
   // add a special filter function

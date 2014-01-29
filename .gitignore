@@ -1,0 +1,9 @@
+*.obj
+*.exe
+*.dblite
+*.dll
+*.exp
+*.lib
+*.so
+*.a
+*.o

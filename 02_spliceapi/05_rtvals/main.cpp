@@ -7,7 +7,7 @@ int main(int argc, const char * argv[])
 {
   FabricSplice::Initialize();
 
-  FabricSplice::addRTFolder("./RT");
+  FabricSplice::addExtFolder("./Exts");
 
   try
   {
