@@ -1,4 +1,0 @@
-CPLoadPythonApplication -f ("E:\\UsergroupWorkshops\\WorkshopDecember2012\\C_IntroductionToCPCAPI\\1_BezierDeformApp.py");
-
-$render = createNode("CPRenderPassLocator");
-setAttr -type "string" ($render + ".path") "1_BezierDeformApp";
