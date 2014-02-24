@@ -68,6 +68,9 @@ int main(int argc, const char * argv[])
     FabricCore::RTVal anotherDataRTVal = port.getRTVal();
     MyDataType * anotherMyData = (MyDataType *)anotherDataRTVal.getData();
     printf("Received MyDataType from RTVal: %s\n", anotherMyData->myString.c_str());
+
+    // free the memory
+    delete(myData);
   }
   catch(FabricSplice::Exception e)
   {
