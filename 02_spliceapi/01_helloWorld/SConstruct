@@ -7,7 +7,7 @@ env.Append(LIBPATH = [os.environ['FABRICSPLICE_API_DIR']])
 env.Append(CPPDEFINES = ['FEC_STATIC', 'FECS_STATIC'])
 
 # Fabric Engine libraries
-env.Append(LIBS = ['FabricSplice-1.11.0_ss', 'FabricCore-1.11_s'])
+env.Append(LIBS = ['FabricSplice-1.11.1_ss', 'FabricCore-1.11_s'])
 
 # standard libraries
 if sys.platform == 'win32':
