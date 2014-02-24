@@ -3,6 +3,10 @@
 #include <string>
 #include <vector>
 
+struct MyDataType {
+  std::string myString;
+};
+
 int main(int argc, const char * argv[]) 
 {
   FabricSplice::Initialize();
@@ -15,6 +19,7 @@ int main(int argc, const char * argv[])
     // this is required for RTVals as well,
     // since they require a running client
     FabricSplice::DGGraph graph("myGraph");
+    graph.constructDGNode();
 
     // build my vector rtval
     FabricCore::RTVal myVector = FabricSplice::constructRTVal("MyVector");
@@ -45,6 +50,24 @@ int main(int argc, const char * argv[])
     {
       printf("sqrt of %d is %f\n", (int)i, values[i]);
     }
+
+    // construct a Data RTVal
+    // it's the developers responsibility to 
+    // free the memory again whenever it is appropriate
+    MyDataType * myData = new MyDataType();
+    myData->myString = "MyDataTypeString";
+    FabricCore::RTVal dataRTVal = FabricSplice::constructDataRTVal(myData);
+
+    // set the RTVal on the node
+    graph.addDGNodeMember("data", "Data");
+    FabricSplice::DGPort port = graph.addDGPort("data", "data", FabricSplice::Port_Mode_IO);
+    port.setRTVal(myData);
+
+    // get the value again
+    // this references the same pointer
+    FabricCore::RTVal anotherDataRTVal = port.getRTVal();
+    MyDataType * anotherMyData = (MyDataType *)anotherDataRTVal.getData();
+    printf("Received MyDataType from RTVal: %s\n", anotherMyData->myString.c_str());
   }
   catch(FabricSplice::Exception e)
   {
