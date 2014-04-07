@@ -15,8 +15,6 @@
     aCoupleOfNames.push('d');
     report(aCoupleOfNames);
 
-    report(aCoupleOfNames[17]);
-
     aCoupleOfNames.resize(2);
     report(aCoupleOfNames);
 
@@ -28,4 +26,7 @@
     otherNames.push('e');
     otherNames.push('f');
     report(aCoupleOfNames);
+
+    
+    report(aCoupleOfNames[17]);
   }
