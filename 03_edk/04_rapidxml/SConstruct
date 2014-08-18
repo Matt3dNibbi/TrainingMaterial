@@ -32,7 +32,7 @@ testEnv.Append(LIBPATH = [os.environ['FABRICSPLICE_API_DIR']])
 testEnv.Append(CPPDEFINES = ['FEC_STATIC', 'FECS_STATIC'])
 
 # Fabric Engine libraries
-testEnv.Append(LIBS = ['FabricSplice-1.12.0_ss', 'FabricCore-1.12_s'])
+testEnv.Append(LIBS = ['FabricSplice-1.13.0_ss', 'FabricCore-1.13_s'])
 
 # standard libraries
 if buildOS == 'Windows':
