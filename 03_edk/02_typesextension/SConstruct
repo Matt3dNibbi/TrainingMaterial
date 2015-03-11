@@ -1,8 +1,45 @@
-import os, sys
+import os, sys, platform
 
+# helper functions
+def which(program):
+  def is_exe(fpath):
+    return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+  for path in os.environ["PATH"].split(os.pathsep):
+    path = path.strip('"')
+    exe_file = os.path.join(path, program)
+    if platform.system() == 'Windows':
+      exe_file += ".exe"
+    if is_exe(exe_file):
+      return exe_file
+  return None
 
+# try to find kl2edk and kl
+kl2edk = which('kl2edk')
+if kl2edk is None:
+  raise Exception('kl2edk could not be found on the PATH.')
+
+# setup the environment and define some methods
+def RunKL2EDK(
+  env,
+  targets,
+  sources
+  ):
+
+  targetFolder = os.path.split(targets[0].path)[0]
+  if targetFolder == '':
+    targetFolder = '.'
+  cmdLine = [[kl2edk] + [sources[0].srcnode().path]]
+  cmdLine[0] += ['-o', targetFolder]
+  result = env.Command(
+    targets,
+    sources,
+    cmdLine   
+  )
+
+  return result
 #---------------------------------------------------------
 extEnv = Environment()
+extEnv.AddMethod(RunKL2EDK)
 
 if sys.platform == 'win32':
   buildOS = 'Windows'
@@ -11,14 +48,19 @@ elif sys.platform == 'linux2':
 
 buildArch = 'x86_64'
 
-extEnv.Append(CPPPATH = [os.path.join(os.environ['FABRIC_EDK_DIR'], 'include')])
+extEnv.Append(CPPPATH = [os.path.join(os.environ['FABRIC_DIR'], 'include')])
 
 extFiles = []
 extFiles += Glob('*.kl')
 extFiles += Glob('*.json')
 
+sources = [extEnv.File('TypesExtension.fpm.json')]
+headers = [extEnv.File('TypesExtension.h')]
+kl2edkResults = extEnv.RunKL2EDK(headers, sources)
+
 edkLibrary = extEnv.SharedLibrary('TypesExtension'+'-'+buildOS+'-'+buildArch, Glob('TypesExtension.cpp'))
 extFiles += edkLibrary
+extFiles += kl2edkResults
 
 extAlias = extEnv.Alias('ext', extFiles)
 

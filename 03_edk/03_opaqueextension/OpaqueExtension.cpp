@@ -1,73 +1,71 @@
-
-#include <Fabric/EDK/EDK.h>
+#include "OpaqueExtension.h"
 
 using namespace Fabric::EDK;
 IMPLEMENT_FABRIC_EDK_ENTRIES( OpaqueExtension )
 
-FABRIC_EXT_KL_STRUCT( OpaqueType, 
+class MyData 
 {
-  class Data 
-  {
-  public:
-    Data();
-    void retain();
-    void release();
-  private:
-    AtomicUInt32 refCount;
-  };
+public:
+  MyData();
+  void retain();
+  void release();
+private:
+  AtomicUInt32 refCount;
+};
 
-  Data * data;
-} );
-
-OpaqueType::Data::Data()
+MyData::MyData()
 {
   AtomicUInt32SetValue( 1, &refCount );
-  printf("--> OpaqueType::Data constructed.\n");
+  printf("--> MyData constructed.\n");
 }
 
-void OpaqueType::Data::release()
+void MyData::release()
 {
   if ( AtomicUInt32DecrementAndGetValue( &refCount ) == 0 )
   {
     delete this;
-    printf("--> OpaqueType::Data deleted.\n");
+    printf("--> MyData deleted.\n");
   }
   else
   {
-    printf("--> OpaqueType::Data released.\n");
+    printf("--> MyData released.\n");
   }
 }
 
-void OpaqueType::Data::retain()
+void MyData::retain()
 {
   AtomicUInt32Increment( &refCount );
-  printf("--> OpaqueType::Data retained.\n");
+  printf("--> MyData retained.\n");
 }
 
+// Defined at ./\OpaqueExtension.kl:6:1
 FABRIC_EXT_EXPORT void OpaqueType_Construct(
-  OpaqueType & o
-  )
-{
-  o.data = new OpaqueType::Data();
+  Fabric::EDK::KL::Traits< Fabric::EDK::KL::OpaqueType >::IOParam this_
+) {
+  this_.data = new MyData();
 }
 
+// Defined at ./\OpaqueExtension.kl:7:1
 FABRIC_EXT_EXPORT void OpaqueType_Copy(
-  OpaqueType & o,
-  const OpaqueType & other
-  )
-{
-  o.data = other.data;
-  if(o.data)
-    o.data->retain();
+  Fabric::EDK::KL::Traits< Fabric::EDK::KL::OpaqueType >::IOParam this_,
+  Fabric::EDK::KL::Traits< Fabric::EDK::KL::OpaqueType >::INParam other
+) {
+  this_.data = other.data;
+  if(this_.data)
+  {
+    MyData * data = (MyData *)this_.data;
+    data->retain();
+  }
 }
 
+// Defined at ./\OpaqueExtension.kl:9:1
 FABRIC_EXT_EXPORT void OpaqueType_Destruct(
-  OpaqueType & o
-  )
-{
-  if(o.data)
+  Fabric::EDK::KL::Traits< Fabric::EDK::KL::OpaqueType >::IOParam this_
+) {
+  if(this_.data)
   {
-    o.data->release();
-    o.data = NULL;
+    MyData * data = (MyData *)this_.data;
+    data->release();
+    this_.data = NULL;
   }
 }
