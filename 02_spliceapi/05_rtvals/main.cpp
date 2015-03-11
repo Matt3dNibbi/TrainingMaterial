@@ -21,6 +21,11 @@ int main(int argc, const char * argv[])
     FabricSplice::DGGraph graph("myGraph");
     graph.constructDGNode();
 
+    // load the extensions
+    FabricCore::Client client = FabricSplice::ConstructClient();
+    client.loadExtension("MyVector", "", false);
+    client.loadExtension("MyMathTool", "", false);
+
     // build my vector rtval
     FabricCore::RTVal myVector = FabricSplice::constructRTVal("MyVector");
 
@@ -61,7 +66,7 @@ int main(int argc, const char * argv[])
     // set the RTVal on the node
     graph.addDGNodeMember("data", "Data");
     FabricSplice::DGPort port = graph.addDGPort("data", "data", FabricSplice::Port_Mode_IO);
-    port.setRTVal(myData);
+    port.setRTVal(dataRTVal);
 
     // get the value again
     // this references the same pointer

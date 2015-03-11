@@ -11,13 +11,6 @@ int main(int argc, const char * argv)
     // create the first graph
     FabricSplice::DGGraph graph("myGraph");
 
-    // check the license
-    if(!FabricSplice::isLicenseValid()) {
-      printf("No license found!\n");
-      FabricSplice::Finalize();
-      return 1;
-    }
-
     // create the first DGNode
     graph.constructDGNode("myNode");
 
