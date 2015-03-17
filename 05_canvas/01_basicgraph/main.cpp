@@ -13,7 +13,7 @@ int main(int argc, const char * argv[])
 {
   try
   {
-    // create a
+    // create a client
     FabricCore::Client::CreateOptions options;
     memset( &options, 0, sizeof( options ) );
     options.optimizationType = FabricCore::ClientOptimizationType_Background;
@@ -25,14 +25,10 @@ int main(int argc, const char * argv[])
     DFGWrapper::Binding binding = host.createBindingToNewGraph();
     DFGWrapper::GraphExecutable graph = binding.getGraph();
     
+    // print out some information
     printf("%s\n", graph.getDesc().c_str());
     printf("%s\n", graph.getObjectType().c_str());
     printf("%s\n", graph.exportJSON().c_str());
-    printf("%s\n", graph.getImportPathname().c_str());
-
-    DFGWrapper::Port value1 = graph.addPort("value1", FabricCore::DFGPortType_In, "Scalar");
-    DFGWrapper::Port value2 = graph.addPort("value2", FabricCore::DFGPortType_In, "Scalar");
-    DFGWrapper::Port result = graph.addPort("result", FabricCore::DFGPortType_Out, "Scalar");
     printf("%s\n", graph.getImportPathname().c_str());
   }
   catch(FabricCore::Exception e)
