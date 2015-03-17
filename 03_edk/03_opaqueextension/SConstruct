@@ -71,7 +71,7 @@ testEnv = Environment()
 
 testEnv.Append(CPPPATH = [os.path.join(os.environ['FABRIC_DIR'], 'include')])
 testEnv.Append(LIBPATH = [os.path.join(os.environ['FABRIC_DIR'], 'lib')])
-testEnv.Append(CPPDEFINES = ['FEC_SHARED', 'FECS_SHARED'])
+testEnv.Append(CPPDEFINES = ['FEC_SHARED', 'FECS_STATIC'])
 
 # Fabric Engine libraries
 testEnv.Append(LIBS = ['FabricSplice-2.0_s', 'FabricCore-2.0'])
