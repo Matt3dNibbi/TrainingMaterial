@@ -18,4 +18,4 @@ else:
   env.Append(LIBS = ['FabricServices'])
   env.Append(LIBS = ['X11', 'GLU', 'GL', 'dl', 'pthread'])
 
-p = env.Program('basicgraph', Glob('*.cpp'))
+p = env.Program('helloworld', Glob('*.cpp'))
