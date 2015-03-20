@@ -11,7 +11,12 @@ void myLogFunc(void * userData, const char * message, unsigned int length)
 
 class MyView : public DFGWrapper::View
 {
-  // general notification callback
+  // general notification callback.
+  // the specialized callbacks below will receive the 
+  // more precise information. but in case you need it you
+  // can get the low level notifications here already.
+  // this might be useful if you need to handle your very
+  // own events.
   virtual void onNotification(char const * json)
   {
     printf("Notification received.\n");
