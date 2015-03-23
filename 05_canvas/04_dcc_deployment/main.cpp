@@ -9,6 +9,9 @@ int main(int argc, const char * argv[])
   BaseInterface * a = new BaseInterface();
   BaseInterface * b = new BaseInterface();
 
+  printf("a->isValid() %d\n", a->isValid() ? 1 : 0);
+  printf("b->isValid() %d\n", b->isValid() ? 1 : 0);
+
   try
   {
     DFGWrapper::GraphExecutable graph = a->getBinding()->getGraph();

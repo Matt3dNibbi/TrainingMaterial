@@ -30,22 +30,29 @@ BaseInterface::BaseInterface()
       // create a host for Canvas
       s_host = new DFGWrapper::Host(s_client);
 
-      // create an empty binding
-      m_binding = s_host->createBindingToNewGraph();
-
 	  // create KL AST manager
       s_manager = new ASTWrapper::KLASTManager(&s_client);
 
 	  // command stack
 	  s_stack;
-
-	  // set the graph on the view
-      setGraph(m_binding.getGraph());
     }
     catch(FabricCore::Exception e)
     {
       printf("Error: %s\n", e.getDesc_cstr());
     }
+  }
+
+  try
+  {
+    // create an empty binding
+    m_binding = s_host->createBindingToNewGraph();
+
+    // set the graph on the view
+    setGraph(m_binding.getGraph());
+  }
+  catch(FabricCore::Exception e)
+  {
+    printf("Error: %s\n", e.getDesc_cstr());
   }
 
   s_instances.insert(std::pair<unsigned int, BaseInterface*>(m_id, this));
