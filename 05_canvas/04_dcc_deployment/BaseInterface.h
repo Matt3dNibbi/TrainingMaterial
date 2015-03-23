@@ -2,6 +2,8 @@
 #define __BASEINTERFACE_H__
 
 #include <DFGWrapper/DFGWrapper.h>
+#include <ASTWrapper/KLASTManager.h>
+#include <Commands/CommandStack.h>
 #include <map>
 
 // a management class for client and host
@@ -22,10 +24,15 @@ public:
   static FabricCore::Client * getClient();
   static FabricServices::DFGWrapper::Host * getHost();
   FabricServices::DFGWrapper::Binding * getBinding();
+  static FabricServices::ASTWrapper::KLASTManager * getManager();
+  static FabricServices::Commands::CommandStack * getStack();
 
   // persistence
   std::string getJSON();
   void setFromJSON(const std::string & json);
+
+  // logging.
+  static void setLogFunc(void (*in_logFunc)(void *, const char *, unsigned int));
 
   // notifications
   // for now we only implement onPortInserted and onPortRemoved
@@ -50,10 +57,13 @@ public:
 private:
 
   static void logFunc(void * userData, const char * message, unsigned int length);
+  static void (*s_logFunc)(void *, const char *, unsigned int);
 
   static FabricCore::Client s_client;
   static FabricServices::DFGWrapper::Host * s_host;
   FabricServices::DFGWrapper::Binding m_binding;
+  static FabricServices::ASTWrapper::KLASTManager * s_manager;
+  static FabricServices::Commands::CommandStack s_stack;
   unsigned int m_id;
   static unsigned int s_maxId;
   static std::map<unsigned int, BaseInterface*> s_instances;
