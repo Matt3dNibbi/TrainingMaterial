@@ -14,14 +14,14 @@ int main(int argc, const char * argv[])
 
   try
   {
-    DFGWrapper::GraphExecutable graph = a->getBinding()->getGraph();
+    DFGWrapper::GraphExecutablePtr graph = DFGWrapper::GraphExecutablePtr::StaticCast(a->getBinding()->getExecutable());
 
     // add a report node
-    DFGWrapper::Node reportNode = graph.addNodeFromPreset("Fabric.Core.Func.Report");
+    DFGWrapper::NodePtr reportNode = graph->addNodeFromPreset("Fabric.Core.Func.Report");
 
     // add an in and one out port
-    graph.addPort("caption", FabricCore::DFGPortType_In);
-    graph.addPort("result", FabricCore::DFGPortType_Out);
+    graph->addPort("caption", FabricCore::DFGPortType_In);
+    graph->addPort("result", FabricCore::DFGPortType_Out);
 
     // print out persistence just for fun
     printf("%s\n", a->getJSON().c_str());

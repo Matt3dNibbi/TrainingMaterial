@@ -3,6 +3,7 @@
 #include <string>
 
 using namespace FabricServices;
+using namespace DFGWrapper;
 
 void myLogFunc(void * userData, const char * message, unsigned int length)
 {
@@ -20,16 +21,13 @@ int main(int argc, const char * argv[])
     FabricCore::Client client(&myLogFunc, NULL, &options);
 
     // create a host for Canvas
-    DFGWrapper::Host host(client);
+    Host host(client);
 
-    DFGWrapper::Binding binding = host.createBindingToNewGraph();
-    DFGWrapper::GraphExecutable graph = binding.getGraph();
+    Binding binding = host.createBindingToNewGraph();
+    GraphExecutablePtr graph = GraphExecutablePtr::StaticCast(binding.getExecutable());
     
     // print out some information
-    printf("%s\n", graph.getDesc().c_str());
-    printf("%s\n", graph.getObjectType().c_str());
-    printf("%s\n", graph.exportJSON().c_str());
-    printf("%s\n", graph.getImportPathname().c_str());
+    printf("%s\n", graph->getDesc().c_str());
   }
   catch(FabricCore::Exception e)
   {

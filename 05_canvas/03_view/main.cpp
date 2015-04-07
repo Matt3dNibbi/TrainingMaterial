@@ -19,77 +19,82 @@ class MyView : public DFGWrapper::View
   // own events.
   virtual void onNotification(char const * json)
   {
-    printf("Notification received.\n");
+    // printf("Notification received.\n");
   }
 
-  virtual void onNodeInserted(DFGWrapper::Node node)
+  virtual void onNodeInserted(DFGWrapper::NodePtr node)
   {
-    printf("Node inserted: '%s'\n", node.getPath().c_str());
+    printf("Node inserted: '%s'\n", node->getNodePath());
   }
 
-  virtual void onNodeRemoved(DFGWrapper::Node node)
+  virtual void onNodeRemoved(DFGWrapper::NodePtr node)
   {
-    printf("Node removed: '%s'\n", node.getPath().c_str());
+    printf("Node removed: '%s'\n", node->getNodePath());
   }
 
-  virtual void onPinInserted(DFGWrapper::Pin pin)
+  virtual void onPinInserted(DFGWrapper::PinPtr pin)
   {
-    printf("Pin inserted: '%s'\n", pin.getPath().c_str());
+    printf("Pin inserted: '%s'\n", pin->getPinPath());
   }
 
-  virtual void onPinRemoved(DFGWrapper::Pin pin)
+  virtual void onPinRemoved(DFGWrapper::PinPtr pin)
   {
-    printf("Pin removed: '%s'\n", pin.getPath().c_str());
+    printf("Pin removed: '%s'\n", pin->getPinPath());
   }
 
-  virtual void onPortInserted(DFGWrapper::Port port)
+  virtual void onPortInserted(DFGWrapper::PortPtr port)
   {
-    printf("Port inserted: '%s'\n", port.getPath().c_str());
+    printf("Port inserted: '%s'\n", port->getPortPath());
   }
 
-  virtual void onPortRemoved(DFGWrapper::Port port)
+  virtual void onPortRemoved(DFGWrapper::PortPtr port)
   {
-    printf("Port inserted: '%s'\n", port.getPath().c_str());
+    printf("Port inserted: '%s'\n", port->getPortPath());
   }
 
-  virtual void onEndPointsConnected(DFGWrapper::Port src, DFGWrapper::Port dst)
+  virtual void onEndPointsConnected(DFGWrapper::EndPointPtr src, DFGWrapper::EndPointPtr dst)
   {
-    printf("Points connected: '%s' - '%s'\n", src.getPath().c_str(), dst.getPath().c_str());
+    printf("Points connected: '%s' - '%s'\n", src->getEndPointPath(), dst->getEndPointPath());
   }
 
-  virtual void onEndPointsDisconnected(DFGWrapper::Port src, DFGWrapper::Port dst)
+  virtual void onEndPointsDisconnected(DFGWrapper::EndPointPtr src, DFGWrapper::EndPointPtr dst)
   {
-    printf("Points disconnected: '%s' - '%s'\n", src.getPath().c_str(), dst.getPath().c_str());
+    printf("Points disconnected: '%s' - '%s'\n", src->getEndPointPath(), dst->getEndPointPath());
   }
 
-  virtual void onNodeMetadataChanged(DFGWrapper::Node node, const char * key, const char * metadata)
+  virtual void onNodeMetadataChanged(DFGWrapper::NodePtr node, const char * key, const char * metadata)
   {
-    printf("Node Metadata changed: '%s' '%s'\n", node.getPath().c_str(), key);
+    printf("Node Metadata changed: '%s' '%s'\n", node->getNodePath(), key);
   }
 
-  virtual void onNodeTitleChanged(DFGWrapper::Node node, const char * title)
+  virtual void onNodeTitleChanged(DFGWrapper::NodePtr node, const char * title)
   {
-    printf("Node title changed: '%s' '%s'\n", node.getPath().c_str(), title);
+    printf("Node title changed: '%s' '%s'\n", node->getNodePath(), title);
   }
 
-  virtual void onPortRenamed(DFGWrapper::Port port, const char * oldName)
+  virtual void onPortRenamed(DFGWrapper::PortPtr port, const char * oldName)
   {
-    printf("Port renamed: '%s' -> '%s\n", oldName, port.getPath().c_str());
+    printf("Port renamed: '%s' -> '%s\n", oldName, port->getPortPath());
   }
 
-  virtual void onPinRenamed(DFGWrapper::Pin pin, const char * oldName)
+  virtual void onPinRenamed(DFGWrapper::PinPtr pin, const char * oldName)
   {
-    printf("Pin renamed: '%s' -> '%s\n", oldName, pin.getPath().c_str());
+    printf("Pin renamed: '%s' -> '%s\n", oldName, pin->getPinPath());
   }
 
-  virtual void onExecMetadataChanged(DFGWrapper::Executable exec, const char * key, const char * metadata)
+  virtual void onExecMetadataChanged(DFGWrapper::ExecutablePtr exec, const char * key, const char * metadata)
   {
-    printf("Exec Metadata changed: '%s' '%s'\n", exec.getPath().c_str(), key);
+    printf("Exec Metadata changed: '%s' '%s'\n", exec->getExecPath(), key);
   }
 
   virtual void onExtDepAdded(const char * extension, const char * version)
   {
     printf("Extension dependency added: '%s'\n", extension);
+  }
+
+  virtual void onExtDepRemoved(const char * extension, const char * version)
+  {
+    printf("Extension dependency removed: '%s'\n", extension);
   }
 
   virtual void onNodeCacheRuleChanged(const char * path, const char * rule)
@@ -100,6 +105,16 @@ class MyView : public DFGWrapper::View
   virtual void onExecCacheRuleChanged(const char * path, const char * rule)
   {
     printf("Exec cache rule changed: '%s' '%s'\n", path, rule);
+  }
+
+  virtual void onPortResolvedTypeChanged(DFGWrapper::PortPtr port, const char * resolvedType)
+  {
+    printf("Port resolved type changed: '%s' '%s'\n", port->getPortPath(), resolvedType);
+  }
+
+  virtual void onPinResolvedTypeChanged(DFGWrapper::PinPtr pin, const char * resolvedType)
+  {
+    printf("Pin resolved type changed: '%s' '%s'\n", pin->getPinPath(), resolvedType);
   }
 
 };
@@ -118,7 +133,7 @@ int main(int argc, const char * argv[])
     DFGWrapper::Host host(client);
 
     DFGWrapper::Binding binding = host.createBindingToNewGraph();
-    DFGWrapper::GraphExecutable graph = binding.getGraph();
+    DFGWrapper::GraphExecutablePtr graph = DFGWrapper::GraphExecutablePtr::StaticCast(binding.getExecutable());
 
     // create a view which is going to receive all events
     MyView view;
@@ -126,15 +141,23 @@ int main(int argc, const char * argv[])
     view.setGraph(graph);
 
     // add a report node
-    DFGWrapper::Node reportNode = graph.addNodeFromPreset("Fabric.Core.Func.Report");
+    DFGWrapper::NodePtr reportNode = graph->addNodeFromPreset("Fabric.Core.Func.Report");
 
     // add an in and one out port
-    graph.addPort("caption", FabricCore::DFGPortType_In);
-    graph.addPort("result", FabricCore::DFGPortType_Out);
+    graph->addPort("caption", FabricCore::DFGPortType_In);
+    graph->addPort("result", FabricCore::DFGPortType_Out);
 
     // connect things up
-    graph.getPort("caption").connect(reportNode.getPin("value"));
-    reportNode.getPin("value").connect(graph.getPort("result"));
+    graph->getPort("caption")->connectTo(reportNode->getPin("value"));
+    reportNode->getPin("value")->connectTo(graph->getPort("result"));
+
+    // setup the values to perform on
+    FabricCore::RTVal value = FabricCore::RTVal::ConstructString(client, "test test test");
+    binding.setArgValue("result", value);
+    binding.setArgValue("caption", value);
+
+    // execute the graph
+    binding.execute();
   }
   catch(FabricCore::Exception e)
   {

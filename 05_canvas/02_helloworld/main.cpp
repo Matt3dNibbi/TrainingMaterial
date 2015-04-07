@@ -23,18 +23,18 @@ int main(int argc, const char * argv[])
     DFGWrapper::Host host(client);
 
     DFGWrapper::Binding binding = host.createBindingToNewGraph();
-    DFGWrapper::GraphExecutable graph = binding.getGraph();
+    DFGWrapper::GraphExecutablePtr graph = DFGWrapper::GraphExecutablePtr::StaticCast(binding.getExecutable());
 
     // add a report node
-    DFGWrapper::Node reportNode = graph.addNodeFromPreset("Fabric.Core.Func.Report");
+    DFGWrapper::NodePtr reportNode = graph->addNodeFromPreset("Fabric.Core.Func.Report");
 
     // add an in and one out port
-    graph.addPort("caption", FabricCore::DFGPortType_In);
-    graph.addPort("result", FabricCore::DFGPortType_Out);
+    graph->addPort("caption", FabricCore::DFGPortType_In);
+    graph->addPort("result", FabricCore::DFGPortType_Out);
 
     // connect things up
-    graph.getPort("caption").connect(reportNode.getPin("value"));
-    reportNode.getPin("value").connect(graph.getPort("result"));
+    graph->getPort("caption")->connectTo(reportNode->getPin("value"));
+    reportNode->getPin("value")->connectTo(graph->getPort("result"));
 
     // setup the values to perform on
     FabricCore::RTVal value = FabricCore::RTVal::ConstructString(client, "test test test");

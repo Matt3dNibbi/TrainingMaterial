@@ -48,7 +48,7 @@ BaseInterface::BaseInterface()
     m_binding = s_host->createBindingToNewGraph();
 
     // set the graph on the view
-    setGraph(m_binding.getGraph());
+    setGraph(DFGWrapper::GraphExecutablePtr::StaticCast(m_binding.getExecutable()));
   }
   catch(FabricCore::Exception e)
   {
@@ -127,7 +127,7 @@ std::string BaseInterface::getJSON()
 {
   try
   {
-    return m_binding.getGraph().exportJSON();
+    return m_binding.getExecutable()->exportJSON();
   }
   catch(FabricCore::Exception e)
   {
@@ -141,7 +141,7 @@ void BaseInterface::setFromJSON(const std::string & json)
   try
   {
     m_binding = s_host->createBindingFromJSON(json.c_str());
-    setGraph(m_binding.getGraph());
+    setGraph(DFGWrapper::GraphExecutablePtr::StaticCast(m_binding.getExecutable()));
   }
   catch(FabricCore::Exception e)
   {
@@ -154,12 +154,12 @@ void BaseInterface::setLogFunc(void (*in_logFunc)(void *, const char *, unsigned
 	s_logFunc = in_logFunc;
 }
 
-void BaseInterface::onPortInserted(FabricServices::DFGWrapper::Port port)
+void BaseInterface::onPortInserted(FabricServices::DFGWrapper::PortPtr port)
 {
   logFunc(0, "A port was inserted. We should really reflect that in the DCC.", 62);
 }
 
-void BaseInterface::onPortRemoved(FabricServices::DFGWrapper::Port port)
+void BaseInterface::onPortRemoved(FabricServices::DFGWrapper::PortPtr port)
 {
   logFunc(0, "A port was removed. We should really reflect that in the DCC.", 61);
 }
