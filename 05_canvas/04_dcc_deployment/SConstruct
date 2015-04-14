@@ -10,12 +10,17 @@ env.Append(CPPDEFINES = ['FEC_SHARED'])
 
 # Fabric Engine libraries
 # and standard libraries
-env.Append(LIBS = ['FabricCore-2.0'])
+env.Append(LIBS = ['FabricCore.2.0'])
 if platform.system().lower().startswith('win'):
   env.Append(LIBS = ['FabricServices-MSVC-'+env['MSVC_VERSION']])
   env.Append(LIBS = ['user32', 'advapi32', 'gdi32', 'shell32', 'ws2_32', 'Opengl32', 'glu32'])
 else:
   env.Append(LIBS = ['FabricServices'])
-  env.Append(LIBS = ['X11', 'GLU', 'GL', 'dl', 'pthread'])
+  env.Append(LIBS = ['dl', 'pthread'])
+
+if platform.system().lower().startswith('darwin'):
+  env.Append(CXXFLAGS = ['-std=c++03'])
+  env.Append(CXXFLAGS = ['-stdlib=libstdc++'])
+  env.Append(LINKFLAGS = ['-stdlib=libstdc++'])
 
 p = env.Program('dccdeployment', Glob('*.cpp'))
