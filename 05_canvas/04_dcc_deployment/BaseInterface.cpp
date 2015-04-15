@@ -46,6 +46,7 @@ BaseInterface::BaseInterface()
   {
     // create an empty binding
     m_binding = s_host->createBindingToNewGraph();
+    m_binding.setNotificationCallback(bindingNotificationCallback, this);
 
     // set the graph on the view
     setGraph(DFGWrapper::GraphExecutablePtr::StaticCast(m_binding.getExecutable()));
@@ -154,16 +155,6 @@ void BaseInterface::setLogFunc(void (*in_logFunc)(void *, const char *, unsigned
 	s_logFunc = in_logFunc;
 }
 
-void BaseInterface::onPortInserted(FabricServices::DFGWrapper::PortPtr port)
-{
-  logFunc(0, "A port was inserted. We should really reflect that in the DCC.", 62);
-}
-
-void BaseInterface::onPortRemoved(FabricServices::DFGWrapper::PortPtr port)
-{
-  logFunc(0, "A port was removed. We should really reflect that in the DCC.", 61);
-}
-
 void BaseInterface::logFunc(void * userData, const char * message, unsigned int length)
 {
   if (s_logFunc)
@@ -173,5 +164,22 @@ void BaseInterface::logFunc(void * userData, const char * message, unsigned int 
   else
   {
     printf("BaseInterface: %s\n", message);
+  }
+}
+
+void BaseInterface::bindingNotificationCallback(void * userData, char const *jsonCString, uint32_t jsonLength)
+{
+  if(!jsonCString)
+    return;
+  BaseInterface * interf = (BaseInterface *)userData;
+
+  FabricCore::Variant notificationVar = FabricCore::Variant::CreateFromJSON(jsonCString, jsonLength);
+
+  const FabricCore::Variant * descVar = notificationVar.getDictValue("desc");
+  std::string descStr = descVar->getStringData();
+
+  if(descStr == "argTypeChanged")
+  {
+    printf("an argument type has changed. you might want to create a DCC port now.\n");
   }
 }

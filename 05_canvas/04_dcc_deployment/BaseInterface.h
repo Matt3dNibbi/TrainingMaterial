@@ -41,8 +41,8 @@ public:
   virtual void onNodeRemoved(FabricServices::DFGWrapper::NodePtr node) {}
   virtual void onPinInserted(FabricServices::DFGWrapper::PinPtr pin) {}
   virtual void onPinRemoved(FabricServices::DFGWrapper::PinPtr pin) {}
-  virtual void onPortInserted(FabricServices::DFGWrapper::PortPtr port);
-  virtual void onPortRemoved(FabricServices::DFGWrapper::PortPtr port);
+  virtual void onPortInserted(FabricServices::DFGWrapper::PortPtr port) {}
+  virtual void onPortRemoved(FabricServices::DFGWrapper::PortPtr port) {}
   virtual void onEndPointsConnected(FabricServices::DFGWrapper::EndPointPtr src, FabricServices::DFGWrapper::EndPointPtr dst) {}
   virtual void onEndPointsDisconnected(FabricServices::DFGWrapper::EndPointPtr src, FabricServices::DFGWrapper::EndPointPtr dst) {}
   virtual void onNodeMetadataChanged(FabricServices::DFGWrapper::NodePtr node, const char * key, const char * metadata) {}
@@ -61,6 +61,7 @@ private:
 
   static void logFunc(void * userData, const char * message, unsigned int length);
   static void (*s_logFunc)(void *, const char *, unsigned int);
+  static void bindingNotificationCallback(void * userData, char const *jsonCString, uint32_t jsonLength);
 
   static FabricCore::Client s_client;
   static FabricServices::DFGWrapper::Host * s_host;
