@@ -1,5 +1,7 @@
 #include "TypesExtension.h"
 
+#include <math.h>
+
 using namespace Fabric::EDK;
 IMPLEMENT_FABRIC_EDK_ENTRIES( TypesExtension )
 
