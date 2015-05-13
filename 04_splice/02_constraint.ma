@@ -4,7 +4,7 @@
 //Codeset: 1252
 requires maya "2014";
 requires -nodeType "spliceMayaNode" -nodeType "spliceMayaDeformer" -dataType "SpliceMayaData"
-		 "FabricSpliceMaya2014" "1.0";
+		 "FabricSpliceMaya" "1.0";
 requires -nodeType "decomposeMatrix" -nodeType "composeMatrix" -nodeType "inverseMatrix"
 		 -nodeType "transposeMatrix" "matrixNodes" "1.0";
 currentUnit -l centimeter -a degree -t film;
