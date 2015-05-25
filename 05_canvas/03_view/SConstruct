@@ -1,7 +1,7 @@
 import os, sys
 import platform
 
-env = Environment(ENV = os.environ, MSVC_VERSION='10.0')
+env = Environment(ENV = os.environ, MSVC_VERSION='12.0')
 
 env.Append(CPPPATH = [os.path.join(os.environ['FABRIC_DIR'], 'include')])
 env.Append(CPPPATH = [os.path.join(os.environ['FABRIC_DIR'], 'include', 'FabricServices')])
@@ -12,7 +12,7 @@ env.Append(CPPDEFINES = ['FEC_SHARED'])
 # and standard libraries
 env.Append(LIBS = ['FabricCore-2.0'])
 if platform.system().lower().startswith('win'):
-  env.Append(LIBS = ['FabricServices-MSVC-'+env['MSVC_VERSION']])
+  env.Append(LIBS = ['FabricServices-MSVC-'+env['MSVC_VERSION']+'-mt'])
   env.Append(LIBS = ['user32', 'advapi32', 'gdi32', 'shell32', 'ws2_32', 'Opengl32', 'glu32'])
 else:
   env.Append(LIBS = ['FabricServices'])

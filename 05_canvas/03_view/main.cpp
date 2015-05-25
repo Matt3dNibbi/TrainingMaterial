@@ -24,12 +24,12 @@ class MyView : public DFGWrapper::View
 
   virtual void onNodeInserted(DFGWrapper::NodePtr node)
   {
-    printf("Node inserted: '%s'\n", node->getNodePath());
+    printf("Node inserted: '%s'\n", node->getName());
   }
 
   virtual void onNodeRemoved(DFGWrapper::NodePtr node)
   {
-    printf("Node removed: '%s'\n", node->getNodePath());
+    printf("Node removed: '%s'\n", node->getName());
   }
 
   virtual void onPinInserted(DFGWrapper::PinPtr pin)
@@ -64,12 +64,12 @@ class MyView : public DFGWrapper::View
 
   virtual void onNodeMetadataChanged(DFGWrapper::NodePtr node, const char * key, const char * metadata)
   {
-    printf("Node Metadata changed: '%s' '%s'\n", node->getNodePath(), key);
+    printf("Node Metadata changed: '%s' '%s'\n", node->getName(), key);
   }
 
   virtual void onNodeTitleChanged(DFGWrapper::NodePtr node, const char * title)
   {
-    printf("Node title changed: '%s' '%s'\n", node->getNodePath(), title);
+    printf("Node title changed: '%s' '%s'\n", node->getName(), title);
   }
 
   virtual void onPortRenamed(DFGWrapper::PortPtr port, const char * oldName)
@@ -112,9 +112,34 @@ class MyView : public DFGWrapper::View
     printf("Port resolved type changed: '%s' '%s'\n", port->getPortPath(), resolvedType);
   }
 
+  virtual void onPortTypeSpecChanged(DFGWrapper::PortPtr port, const char * typeSpec)
+  {
+    printf("Port type spec changed: '%s' '%s'\n", port->getPortPath(), typeSpec);
+  }
+
   virtual void onPinResolvedTypeChanged(DFGWrapper::PinPtr pin, const char * resolvedType)
   {
     printf("Pin resolved type changed: '%s' '%s'\n", pin->getPinPath(), resolvedType);
+  }
+
+  virtual void onPortMetadataChanged(DFGWrapper::PortPtr port, const char * key, const char * metadata)
+  {
+    printf("Port meta data changed: '%s' '%s': '%s'\n", port->getPortPath(), key, metadata);
+  }
+
+  virtual void onPinMetadataChanged(DFGWrapper::PinPtr pin, const char * key, const char * metadata)
+  {
+    printf("Pin meta data changed: '%s' '%s': '%s'\n", pin->getPinPath(), key, metadata);
+  }
+
+  virtual void onPinTypeChanged(DFGWrapper::PinPtr pin, FabricCore::DFGPortType pinType)
+  {
+    printf("Pin type changed: '%s': '%d'\n", pin->getPinPath(), (int)pinType);
+  }
+
+  virtual void onPortTypeChanged(DFGWrapper::PortPtr port, FabricCore::DFGPortType portType)
+  {
+    printf("Port type changed: '%s': '%d'\n", port->getPortPath(), (int)portType);
   }
 
 };
