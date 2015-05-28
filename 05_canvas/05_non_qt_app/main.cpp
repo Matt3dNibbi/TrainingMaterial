@@ -72,22 +72,6 @@ void openCanvasUI(HWND hwnd)
 
   if(!g_windowData->qtMainWindow->isVisible())
   {
-
-      // DFGCombinedWidget(QWidget * parent);
-
-      // ~DFGCombinedWidget();
-
-      // virtual void init(      
-      //   FabricCore::Client * client,
-      //   FabricServices::ASTWrapper::KLASTManager * manager,
-      //   FabricServices::DFGWrapper::Host * host,
-      //   FabricServices::DFGWrapper::Binding binding,
-      //   FabricServices::DFGWrapper::GraphExecutablePtr graph,
-      //   FabricServices::Commands::CommandStack * stack,
-      //   bool overTakeBindingNotifications = true,
-      //   DFGConfig config = DFGConfig()
-      // );
-
     g_windowData->qtMainWindow->show();
     while(g_windowData->qtMainWindow->isVisible())
     {
