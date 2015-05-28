@@ -60,13 +60,19 @@ void openCanvasUI(HWND hwnd)
     g_windowData->qtMainWindow = new QMainWindow();
     g_windowData->qtDFGWidget = new MyDFGWidget(g_windowData->qtMainWindow);
     g_windowData->qtMainWindow->setCentralWidget(g_windowData->qtDFGWidget);
+
+    DFG::DFGConfig config;
+    config.graphConfig.useOpenGL = false;
+
     g_windowData->qtDFGWidget->init(
       g_windowData->client,
       g_windowData->manager,
       g_windowData->host,
       g_windowData->binding,
       g_windowData->graph,
-      &g_windowData->stack
+      &g_windowData->stack,
+      true,
+      config
     );
   }
 
