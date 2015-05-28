@@ -33,8 +33,8 @@ int main(int argc, const char * argv[])
     graph->addPort("result", FabricCore::DFGPortType_Out);
 
     // connect things up
-    graph->getPort("caption")->connectTo(reportNode->getPin("value"));
-    reportNode->getPin("value")->connectTo(graph->getPort("result"));
+    graph->getPort("caption")->connectTo(reportNode->getPort("value"));
+    reportNode->getPort("value")->connectTo(graph->getPort("result"));
 
     // setup the values to perform on
     FabricCore::RTVal value = FabricCore::RTVal::ConstructString(client, "test test test");

@@ -32,34 +32,34 @@ class MyView : public DFGWrapper::View
     printf("Node removed: '%s'\n", node->getName());
   }
 
-  virtual void onPinInserted(DFGWrapper::PinPtr pin)
+  virtual void onNodePortInserted(DFGWrapper::NodePortPtr pin)
   {
-    printf("Pin inserted: '%s'\n", pin->getPinPath());
+    printf("Pin inserted: '%s'\n", pin->getNodePortPath());
   }
 
-  virtual void onPinRemoved(DFGWrapper::PinPtr pin)
+  virtual void onNodePortRemoved(DFGWrapper::NodePortPtr pin)
   {
-    printf("Pin removed: '%s'\n", pin->getPinPath());
+    printf("Pin removed: '%s'\n", pin->getNodePortPath());
   }
 
-  virtual void onPortInserted(DFGWrapper::PortPtr port)
+  virtual void onExecPortInserted(DFGWrapper::ExecPortPtr port)
   {
     printf("Port inserted: '%s'\n", port->getPortPath());
   }
 
-  virtual void onPortRemoved(DFGWrapper::PortPtr port)
+  virtual void onExecPortRemoved(DFGWrapper::ExecPortPtr port)
   {
     printf("Port inserted: '%s'\n", port->getPortPath());
   }
 
-  virtual void onEndPointsConnected(DFGWrapper::EndPointPtr src, DFGWrapper::EndPointPtr dst)
+  virtual void onPortsConnected(DFGWrapper::PortPtr src, DFGWrapper::PortPtr dst)
   {
-    printf("Points connected: '%s' - '%s'\n", src->getEndPointPath(), dst->getEndPointPath());
+    printf("Points connected: '%s' - '%s'\n", src->getPortPath(), dst->getPortPath());
   }
 
-  virtual void onEndPointsDisconnected(DFGWrapper::EndPointPtr src, DFGWrapper::EndPointPtr dst)
+  virtual void onPortsDisconnected(DFGWrapper::PortPtr src, DFGWrapper::PortPtr dst)
   {
-    printf("Points disconnected: '%s' - '%s'\n", src->getEndPointPath(), dst->getEndPointPath());
+    printf("Points disconnected: '%s' - '%s'\n", src->getPortPath(), dst->getPortPath());
   }
 
   virtual void onNodeMetadataChanged(DFGWrapper::NodePtr node, const char * key, const char * metadata)
@@ -72,14 +72,14 @@ class MyView : public DFGWrapper::View
     printf("Node title changed: '%s' '%s'\n", node->getName(), title);
   }
 
-  virtual void onPortRenamed(DFGWrapper::PortPtr port, const char * oldName)
+  virtual void onExecPortRenamed(DFGWrapper::ExecPortPtr port, const char * oldName)
   {
     printf("Port renamed: '%s' -> '%s\n", oldName, port->getPortPath());
   }
 
-  virtual void onPinRenamed(DFGWrapper::PinPtr pin, const char * oldName)
+  virtual void onNodePortRenamed(DFGWrapper::NodePortPtr pin, const char * oldName)
   {
-    printf("Pin renamed: '%s' -> '%s\n", oldName, pin->getPinPath());
+    printf("Pin renamed: '%s' -> '%s\n", oldName, pin->getNodePortPath());
   }
 
   virtual void onExecMetadataChanged(DFGWrapper::ExecutablePtr exec, const char * key, const char * metadata)
@@ -107,37 +107,37 @@ class MyView : public DFGWrapper::View
     printf("Exec cache rule changed: '%s' '%s'\n", path, rule);
   }
 
-  virtual void onPortResolvedTypeChanged(DFGWrapper::PortPtr port, const char * resolvedType)
+  virtual void onExecPortResolvedTypeChanged(DFGWrapper::ExecPortPtr port, const char * resolvedType)
   {
     printf("Port resolved type changed: '%s' '%s'\n", port->getPortPath(), resolvedType);
   }
 
-  virtual void onPortTypeSpecChanged(DFGWrapper::PortPtr port, const char * typeSpec)
+  virtual void onExecPortTypeSpecChanged(DFGWrapper::ExecPortPtr port, const char * typeSpec)
   {
     printf("Port type spec changed: '%s' '%s'\n", port->getPortPath(), typeSpec);
   }
 
-  virtual void onPinResolvedTypeChanged(DFGWrapper::PinPtr pin, const char * resolvedType)
+  virtual void onNodePortResolvedTypeChanged(DFGWrapper::NodePortPtr pin, const char * resolvedType)
   {
-    printf("Pin resolved type changed: '%s' '%s'\n", pin->getPinPath(), resolvedType);
+    printf("Pin resolved type changed: '%s' '%s'\n", pin->getNodePortPath(), resolvedType);
   }
 
-  virtual void onPortMetadataChanged(DFGWrapper::PortPtr port, const char * key, const char * metadata)
+  virtual void onExecPortMetadataChanged(DFGWrapper::ExecPortPtr port, const char * key, const char * metadata)
   {
     printf("Port meta data changed: '%s' '%s': '%s'\n", port->getPortPath(), key, metadata);
   }
 
-  virtual void onPinMetadataChanged(DFGWrapper::PinPtr pin, const char * key, const char * metadata)
+  virtual void onNodePortMetadataChanged(DFGWrapper::NodePortPtr pin, const char * key, const char * metadata)
   {
-    printf("Pin meta data changed: '%s' '%s': '%s'\n", pin->getPinPath(), key, metadata);
+    printf("Pin meta data changed: '%s' '%s': '%s'\n", pin->getNodePortPath(), key, metadata);
   }
 
-  virtual void onPinTypeChanged(DFGWrapper::PinPtr pin, FabricCore::DFGPortType pinType)
+  virtual void onNodePortTypeChanged(DFGWrapper::NodePortPtr pin, FabricCore::DFGPortType pinType)
   {
-    printf("Pin type changed: '%s': '%d'\n", pin->getPinPath(), (int)pinType);
+    printf("Pin type changed: '%s': '%d'\n", pin->getNodePortPath(), (int)pinType);
   }
 
-  virtual void onPortTypeChanged(DFGWrapper::PortPtr port, FabricCore::DFGPortType portType)
+  virtual void onExecPortTypeChanged(DFGWrapper::ExecPortPtr port, FabricCore::DFGPortType portType)
   {
     printf("Port type changed: '%s': '%d'\n", port->getPortPath(), (int)portType);
   }
@@ -173,8 +173,8 @@ int main(int argc, const char * argv[])
     graph->addPort("result", FabricCore::DFGPortType_Out);
 
     // connect things up
-    graph->getPort("caption")->connectTo(reportNode->getPin("value"));
-    reportNode->getPin("value")->connectTo(graph->getPort("result"));
+    graph->getPort("caption")->connectTo(reportNode->getPort("value"));
+    reportNode->getPort("value")->connectTo(graph->getPort("result"));
 
     // setup the values to perform on
     FabricCore::RTVal value = FabricCore::RTVal::ConstructString(client, "test test test");

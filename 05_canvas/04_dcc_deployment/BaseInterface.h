@@ -39,28 +39,28 @@ public:
   virtual void onNotification(char const * json) {}
   virtual void onNodeInserted(FabricServices::DFGWrapper::NodePtr node) {}
   virtual void onNodeRemoved(FabricServices::DFGWrapper::NodePtr node) {}
-  virtual void onPinInserted(FabricServices::DFGWrapper::PinPtr pin) {}
-  virtual void onPinRemoved(FabricServices::DFGWrapper::PinPtr pin) {}
-  virtual void onPortInserted(FabricServices::DFGWrapper::PortPtr port) {}
-  virtual void onPortRemoved(FabricServices::DFGWrapper::PortPtr port) {}
-  virtual void onEndPointsConnected(FabricServices::DFGWrapper::EndPointPtr src, FabricServices::DFGWrapper::EndPointPtr dst) {}
-  virtual void onEndPointsDisconnected(FabricServices::DFGWrapper::EndPointPtr src, FabricServices::DFGWrapper::EndPointPtr dst) {}
+  virtual void onNodePortInserted(FabricServices::DFGWrapper::NodePortPtr pin) {}
+  virtual void onNodePortRemoved(FabricServices::DFGWrapper::NodePortPtr pin) {}
+  virtual void onExecPortInserted(FabricServices::DFGWrapper::ExecPortPtr port) {}
+  virtual void onExecPortRemoved(FabricServices::DFGWrapper::ExecPortPtr port) {}
+  virtual void onPortsConnected(FabricServices::DFGWrapper::PortPtr src, FabricServices::DFGWrapper::PortPtr dst) {}
+  virtual void onPortsDisconnected(FabricServices::DFGWrapper::PortPtr src, FabricServices::DFGWrapper::PortPtr dst) {}
   virtual void onNodeMetadataChanged(FabricServices::DFGWrapper::NodePtr node, const char * key, const char * metadata) {}
   virtual void onNodeTitleChanged(FabricServices::DFGWrapper::NodePtr node, const char * title) {}
-  virtual void onPortRenamed(FabricServices::DFGWrapper::PortPtr port, const char * oldName) {}
-  virtual void onPinRenamed(FabricServices::DFGWrapper::PinPtr pin, const char * oldName) {}
+  virtual void onExecPortRenamed(FabricServices::DFGWrapper::ExecPortPtr port, const char * oldName) {}
+  virtual void onNodePortRenamed(FabricServices::DFGWrapper::NodePortPtr pin, const char * oldName) {}
   virtual void onExecMetadataChanged(FabricServices::DFGWrapper::ExecutablePtr exec, const char * key, const char * metadata) {}
   virtual void onExtDepAdded(const char * extension, const char * version) {}
   virtual void onExtDepRemoved(const char * extension, const char * version) {}
   virtual void onNodeCacheRuleChanged(const char * path, const char * rule) {}
   virtual void onExecCacheRuleChanged(const char * path, const char * rule) {}
-  virtual void onPortResolvedTypeChanged(FabricServices::DFGWrapper::PortPtr port, const char * resolvedType) {}
-  virtual void onPortTypeSpecChanged(FabricServices::DFGWrapper::PortPtr port, const char * typeSpec) {}
-  virtual void onPinResolvedTypeChanged(FabricServices::DFGWrapper::PinPtr pin, const char * resolvedType) {}
-  virtual void onPortMetadataChanged(FabricServices::DFGWrapper::PortPtr port, const char * key, const char * metadata) {}
-  virtual void onPinMetadataChanged(FabricServices::DFGWrapper::PinPtr pin, const char * key, const char * metadata) {}
-  virtual void onPinTypeChanged(FabricServices::DFGWrapper::PinPtr pin, FabricCore::DFGPortType pinType) {}
-  virtual void onPortTypeChanged(FabricServices::DFGWrapper::PortPtr port, FabricCore::DFGPortType portType) {}
+  virtual void onExecPortResolvedTypeChanged(FabricServices::DFGWrapper::ExecPortPtr port, const char * resolvedType) {}
+  virtual void onExecPortTypeSpecChanged(FabricServices::DFGWrapper::ExecPortPtr port, const char * typeSpec) {}
+  virtual void onNodePortResolvedTypeChanged(FabricServices::DFGWrapper::NodePortPtr pin, const char * resolvedType) {}
+  virtual void onExecPortMetadataChanged(FabricServices::DFGWrapper::ExecPortPtr port, const char * key, const char * metadata) {}
+  virtual void onNodePortMetadataChanged(FabricServices::DFGWrapper::NodePortPtr pin, const char * key, const char * metadata) {}
+  virtual void onNodePortTypeChanged(FabricServices::DFGWrapper::NodePortPtr pin, FabricCore::DFGPortType pinType) {}
+  virtual void onExecPortTypeChanged(FabricServices::DFGWrapper::ExecPortPtr port, FabricCore::DFGPortType portType) {}
 
 private:
 
