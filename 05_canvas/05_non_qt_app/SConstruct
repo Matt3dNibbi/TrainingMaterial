@@ -1,6 +1,13 @@
 import os, sys
 import platform
 
+AddOption('--buildType',
+                  dest='buildType',
+                  type='string',
+                  nargs=1,
+                  action='store',
+                  help='Type of build to perform (Release or Debug)')
+
 if not platform.system().lower().startswith('win'):
   # todo: other operating systems
   raise Exception("This extension only builds for Windows.")
@@ -13,6 +20,9 @@ thirdpartyDirs = {
 
 buildType = 'Release'
 
+if str(GetOption('buildType')).lower() == 'debug':
+  buildType = 'Debug'
+  
 # help debug print
 if GetOption('help'):
   print 'Required environment variables: '
@@ -21,10 +31,10 @@ if GetOption('help'):
   print ''
   Exit()
 
-# for windows for now use Visual Studio 2010. 
+# for windows for now use Visual Studio 2013
 # if you upgrade this you will also have to provide
 # boost libs for the corresponding VS version
-env = Environment(ENV = os.environ, MSVC_VERSION='10.0')
+env = Environment(ENV = os.environ, MSVC_VERSION='12.0')
 
 # find the third party libs
 for thirdpartyDir in thirdpartyDirs:
@@ -41,7 +51,10 @@ env.Append(CPPDEFINES = ['FEC_SHARED'])
 # Fabric Engine libraries
 # and standard libraries
 env.Append(LIBS = ['FabricCore-2.0'])
-env.Append(LIBS = ['FabricServices-MSVC-'+env['MSVC_VERSION']+'-mt'])
+if buildType == 'Debug':
+  env.Append(LIBS = ['FabricServices-MSVC-'+env['MSVC_VERSION']+'-mtd'])
+else:
+  env.Append(LIBS = ['FabricServices-MSVC-'+env['MSVC_VERSION']+'-mt'])
 env.Append(LIBS = ['user32', 'advapi32', 'gdi32', 'shell32', 'ws2_32', 'Opengl32', 'glu32'])
 env.Append(LINKFLAGS = ['/SUBSYSTEM:CONSOLE'])
 env.Append(LIBS = ['FabricSplitSearch'])
@@ -70,6 +83,13 @@ elif platform.system().lower().startswith('lin'):
   qtFlags['LIBS'] = ['QtGui', 'QtCore', 'QtOpenGL']
   qtMOC = '/usr/bin/moc-qt4'
 
+if buildType == 'Debug':
+  env.Append(CPPDEFINES = ['_DEBUG'])
+  env.Append(CPPDEFINES = ['_ITERATOR_DEBUG_LEVEL=2'])
+  env.Append(CCFLAGS = ['/MTd'])
+else:
+  env.Append(CCFLAGS = ['/MT'])
+  
 # ui related libraries
 env.MergeFlags(qtFlags)
 env.Append(CPPPATH = [os.path.join(os.environ['FABRIC_UI_DIR'], 'stage', 'include')])
