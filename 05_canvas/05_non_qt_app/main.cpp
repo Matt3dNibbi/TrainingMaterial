@@ -55,8 +55,8 @@ void openCanvasUI(HWND hwnd)
 {
   if(g_windowData->qtApp == NULL)
   {
-    int argv = 0;
-    g_windowData->qtApp = new QApplication(argv, NULL);
+    int argc = 0;
+    g_windowData->qtApp = new QApplication(argc, NULL);
     g_windowData->qtMainWindow = new QMainWindow();
     g_windowData->qtDFGWidget = new MyDFGWidget(g_windowData->qtMainWindow);
     g_windowData->qtMainWindow->setCentralWidget(g_windowData->qtDFGWidget);
