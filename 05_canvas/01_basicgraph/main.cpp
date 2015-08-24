@@ -1,11 +1,14 @@
 
-#include <DFGWrapper/DFGWrapper.h>
+#include <FabricCore.h>
 #include <string>
 
-using namespace FabricServices;
-using namespace DFGWrapper;
-
-void myLogFunc(void * userData, const char * message, unsigned int length)
+void myLogFunc(
+  void * userData, 
+  FEC_ReportSource source,
+  FEC_ReportLevel level,
+  const char * message, 
+  unsigned int length
+  )
 {
   printf("%s\n", message);
 }
@@ -21,13 +24,13 @@ int main(int argc, const char * argv[])
     FabricCore::Client client(&myLogFunc, NULL, &options);
 
     // create a host for Canvas
-    Host host(client);
+    FabricCore::DFGHost host = client.getDFGHost();
 
-    Binding binding = host.createBindingToNewGraph();
-    GraphExecutablePtr graph = GraphExecutablePtr::StaticCast(binding.getExecutable());
+    FabricCore::DFGBinding binding = host.createBindingToNewGraph();
+    FabricCore::DFGExec exec = binding.getExec();
     
     // print out some information
-    printf("%s\n", graph->getDesc().c_str());
+    printf("%s\n", exec.getDesc().getCString());
   }
   catch(FabricCore::Exception e)
   {

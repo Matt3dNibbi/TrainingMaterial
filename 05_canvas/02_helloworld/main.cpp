@@ -1,10 +1,14 @@
 
-#include <DFGWrapper/DFGWrapper.h>
+#include <FabricCore.h>
 #include <string>
 
-using namespace FabricServices;
-
-void myLogFunc(void * userData, const char * message, unsigned int length)
+void myLogFunc(
+  void * userData, 
+  FEC_ReportSource source,
+  FEC_ReportLevel level,
+  const char * message, 
+  unsigned int length
+  )
 {
   printf("%s\n", message);
 }
@@ -20,21 +24,21 @@ int main(int argc, const char * argv[])
     FabricCore::Client client(&myLogFunc, NULL, &options);
 
     // create a host for Canvas
-    DFGWrapper::Host host(client);
+    FabricCore::DFGHost host = client.getDFGHost();
 
-    DFGWrapper::Binding binding = host.createBindingToNewGraph();
-    DFGWrapper::GraphExecutablePtr graph = DFGWrapper::GraphExecutablePtr::StaticCast(binding.getExecutable());
+    FabricCore::DFGBinding binding = host.createBindingToNewGraph();
+    FabricCore::DFGExec exec = binding.getExec();
 
     // add a report node
-    DFGWrapper::NodePtr reportNode = graph->addNodeFromPreset("Fabric.Core.Func.Report");
+    std::string reportNode = exec.addInstFromPreset("Fabric.Core.Func.Report");
 
     // add an in and one out port
-    graph->addPort("caption", FabricCore::DFGPortType_In);
-    graph->addPort("result", FabricCore::DFGPortType_Out);
+    exec.addExecPort("caption", FabricCore::DFGPortType_In);
+    exec.addExecPort("result", FabricCore::DFGPortType_Out);
 
     // connect things up
-    graph->getPort("caption")->connectTo(reportNode->getPort("value"));
-    reportNode->getPort("value")->connectTo(graph->getPort("result"));
+    exec.connectTo("caption", (reportNode + ".value").c_str());
+    exec.connectTo((reportNode + ".value").c_str(), "result");
 
     // setup the values to perform on
     FabricCore::RTVal value = FabricCore::RTVal::ConstructString(client, "test test test");

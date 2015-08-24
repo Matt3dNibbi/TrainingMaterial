@@ -1,146 +1,67 @@
 
-#include <DFGWrapper/DFGWrapper.h>
+#include <FabricCore.h>
+#include <FTL/CStrRef.h>
+#include <FTL/JSONValue.h>
 #include <string>
 
-using namespace FabricServices;
-
-void myLogFunc(void * userData, const char * message, unsigned int length)
+void myLogFunc(
+  void * userData, 
+  FEC_ReportSource source,
+  FEC_ReportLevel level,
+  const char * message, 
+  unsigned int length
+  )
 {
   printf("%s\n", message);
 }
 
-class MyView : public DFGWrapper::View
+class MyNotificationRouter
 {
+public:  
+
+  MyNotificationRouter(FabricCore::DFGExec & exec)
+  {
+    m_dfgView = exec.createView( &Callback, this );
+  }
+
   // general notification callback.
   // the specialized callbacks below will receive the 
   // more precise information. but in case you need it you
   // can get the low level notifications here already.
   // this might be useful if you need to handle your very
   // own events.
-  virtual void onNotification(char const * json)
+  virtual void onNotification(FTL::CStrRef jsonStr)
   {
-    // printf("Notification received.\n");
+    printf("Notification received %s.\n", jsonStr.c_str());
+
+    // decode json
+    FTL::JSONStrWithLoc jsonStrWithLoc( jsonStr );
+    FTL::OwnedPtr<FTL::JSONObject> jsonObject(
+      FTL::JSONValue::Decode( jsonStrWithLoc )->cast<FTL::JSONObject>()
+      );
+
+    FTL::CStrRef descStr = jsonObject->getString( FTL_STR("desc") );
+    printf("Description is: %s\n", descStr.c_str());
+
+    /* here you can go ahead and decode further if you
+       want to react to a specific notification
+    */
   }
 
-  virtual void onNodeInserted(DFGWrapper::NodePtr node)
+private:
+
+  static void Callback(
+    void *thisVoidPtr,
+    char const *jsonCStr,
+    uint32_t jsonSize
+    )
   {
-    printf("Node inserted: '%s'\n", node->getName());
+    static_cast<MyNotificationRouter *>( thisVoidPtr )->onNotification(
+      FTL::CStrRef( jsonCStr, jsonSize )
+      );
   }
 
-  virtual void onNodeRemoved(DFGWrapper::NodePtr node)
-  {
-    printf("Node removed: '%s'\n", node->getName());
-  }
-
-  virtual void onNodePortInserted(DFGWrapper::NodePortPtr pin)
-  {
-    printf("Pin inserted: '%s'\n", pin->getNodePortPath());
-  }
-
-  virtual void onNodePortRemoved(DFGWrapper::NodePortPtr pin)
-  {
-    printf("Pin removed: '%s'\n", pin->getNodePortPath());
-  }
-
-  virtual void onExecPortInserted(DFGWrapper::ExecPortPtr port)
-  {
-    printf("Port inserted: '%s'\n", port->getPortPath());
-  }
-
-  virtual void onExecPortRemoved(DFGWrapper::ExecPortPtr port)
-  {
-    printf("Port inserted: '%s'\n", port->getPortPath());
-  }
-
-  virtual void onPortsConnected(DFGWrapper::PortPtr src, DFGWrapper::PortPtr dst)
-  {
-    printf("Points connected: '%s' - '%s'\n", src->getPortPath(), dst->getPortPath());
-  }
-
-  virtual void onPortsDisconnected(DFGWrapper::PortPtr src, DFGWrapper::PortPtr dst)
-  {
-    printf("Points disconnected: '%s' - '%s'\n", src->getPortPath(), dst->getPortPath());
-  }
-
-  virtual void onNodeMetadataChanged(DFGWrapper::NodePtr node, const char * key, const char * metadata)
-  {
-    printf("Node Metadata changed: '%s' '%s'\n", node->getName(), key);
-  }
-
-  virtual void onNodeTitleChanged(DFGWrapper::NodePtr node, const char * title)
-  {
-    printf("Node title changed: '%s' '%s'\n", node->getName(), title);
-  }
-
-  virtual void onExecPortRenamed(DFGWrapper::ExecPortPtr port, const char * oldName)
-  {
-    printf("Port renamed: '%s' -> '%s\n", oldName, port->getPortPath());
-  }
-
-  virtual void onNodePortRenamed(DFGWrapper::NodePortPtr pin, const char * oldName)
-  {
-    printf("Pin renamed: '%s' -> '%s\n", oldName, pin->getNodePortPath());
-  }
-
-  virtual void onExecMetadataChanged(DFGWrapper::ExecutablePtr exec, const char * key, const char * metadata)
-  {
-    printf("Exec Metadata changed: '%s' '%s'\n", exec->getExecPath(), key);
-  }
-
-  virtual void onExtDepAdded(const char * extension, const char * version)
-  {
-    printf("Extension dependency added: '%s'\n", extension);
-  }
-
-  virtual void onExtDepRemoved(const char * extension, const char * version)
-  {
-    printf("Extension dependency removed: '%s'\n", extension);
-  }
-
-  virtual void onNodeCacheRuleChanged(const char * path, const char * rule)
-  {
-    printf("Node cache rule changed: '%s' '%s'\n", path, rule);
-  }
-
-  virtual void onExecCacheRuleChanged(const char * path, const char * rule)
-  {
-    printf("Exec cache rule changed: '%s' '%s'\n", path, rule);
-  }
-
-  virtual void onExecPortResolvedTypeChanged(DFGWrapper::ExecPortPtr port, const char * resolvedType)
-  {
-    printf("Port resolved type changed: '%s' '%s'\n", port->getPortPath(), resolvedType);
-  }
-
-  virtual void onExecPortTypeSpecChanged(DFGWrapper::ExecPortPtr port, const char * typeSpec)
-  {
-    printf("Port type spec changed: '%s' '%s'\n", port->getPortPath(), typeSpec);
-  }
-
-  virtual void onNodePortResolvedTypeChanged(DFGWrapper::NodePortPtr pin, const char * resolvedType)
-  {
-    printf("Pin resolved type changed: '%s' '%s'\n", pin->getNodePortPath(), resolvedType);
-  }
-
-  virtual void onExecPortMetadataChanged(DFGWrapper::ExecPortPtr port, const char * key, const char * metadata)
-  {
-    printf("Port meta data changed: '%s' '%s': '%s'\n", port->getPortPath(), key, metadata);
-  }
-
-  virtual void onNodePortMetadataChanged(DFGWrapper::NodePortPtr pin, const char * key, const char * metadata)
-  {
-    printf("Pin meta data changed: '%s' '%s': '%s'\n", pin->getNodePortPath(), key, metadata);
-  }
-
-  virtual void onNodePortTypeChanged(DFGWrapper::NodePortPtr pin, FabricCore::DFGPortType pinType)
-  {
-    printf("Pin type changed: '%s': '%d'\n", pin->getNodePortPath(), (int)pinType);
-  }
-
-  virtual void onExecPortTypeChanged(DFGWrapper::ExecPortPtr port, FabricCore::DFGPortType portType)
-  {
-    printf("Port type changed: '%s': '%d'\n", port->getPortPath(), (int)portType);
-  }
+  FabricCore::DFGView m_dfgView;
 
 };
 
@@ -155,26 +76,24 @@ int main(int argc, const char * argv[])
     FabricCore::Client client(&myLogFunc, NULL, &options);
 
     // create a host for Canvas
-    DFGWrapper::Host host(client);
+    FabricCore::DFGHost host = client.getDFGHost();
 
-    DFGWrapper::Binding binding = host.createBindingToNewGraph();
-    DFGWrapper::GraphExecutablePtr graph = DFGWrapper::GraphExecutablePtr::StaticCast(binding.getExecutable());
+    FabricCore::DFGBinding binding = host.createBindingToNewGraph();
+    FabricCore::DFGExec exec = binding.getExec();
 
-    // create a view which is going to receive all events
-    MyView view;
-    // connect the view to the graph
-    view.setGraph(graph);
+    // create a router which is going to receive all notifications
+    MyNotificationRouter router(exec);
 
     // add a report node
-    DFGWrapper::NodePtr reportNode = graph->addNodeFromPreset("Fabric.Core.Func.Report");
+    std::string reportNode = exec.addInstFromPreset("Fabric.Core.Func.Report");
 
     // add an in and one out port
-    graph->addPort("caption", FabricCore::DFGPortType_In);
-    graph->addPort("result", FabricCore::DFGPortType_Out);
+    exec.addExecPort("caption", FabricCore::DFGPortType_In);
+    exec.addExecPort("result", FabricCore::DFGPortType_Out);
 
     // connect things up
-    graph->getPort("caption")->connectTo(reportNode->getPort("value"));
-    reportNode->getPort("value")->connectTo(graph->getPort("result"));
+    exec.connectTo("caption", (reportNode + ".value").c_str());
+    exec.connectTo((reportNode + ".value").c_str(), "result");
 
     // setup the values to perform on
     FabricCore::RTVal value = FabricCore::RTVal::ConstructString(client, "test test test");

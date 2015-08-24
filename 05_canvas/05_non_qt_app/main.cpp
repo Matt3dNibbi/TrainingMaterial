@@ -8,11 +8,27 @@
 #include <iostream>
 #include <fstream>
 
-#include <DFGWrapper/DFGWrapper.h>
-#include <DFG/DFGCombinedWidget.h>
+#include <FabricCore.h>
+#include <FabricUI/DFG/DFGCombinedWidget.h>
+#include <FabricUI/DFG/DFGUICmdHandler_QUndo.h>
 
 using namespace FabricServices;
 using namespace FabricUI;
+
+/* react to commands
+   you really should inherit from DFGUICmdHandler instead.
+   that way you can fire your own script commands to your
+   own undo stack to deal with undo redo properly.
+*/
+class MyCmdHandler : public DFG::DFGUICmdHandler_QUndo
+{
+public:
+  MyCmdHandler() : DFG::DFGUICmdHandler_QUndo(&m_stack) {};
+
+private:
+
+  QUndoStack m_stack;
+};
 
 class MyDFGWidget : public DFG::DFGCombinedWidget
 {
@@ -26,10 +42,16 @@ public:
 
   virtual void onRecompilation()
   {
-    log(0, "Recompiling", 12);
+    log(0, FEC_ReportSource_User, FEC_ReportLevel_Info, "Recompiling", 12);
   }
 
-  static void log(void * userData, const char * message, unsigned int length)
+  static void log(
+    void * userData, 
+    FEC_ReportSource source,
+    FEC_ReportLevel level,
+    const char * message, 
+    unsigned int length
+    )
   {
     printf("%s\n", message);
   }
@@ -39,13 +61,13 @@ struct WindowData
 {
   QApplication * qtApp;
   QMainWindow * qtMainWindow;
+  MyCmdHandler * qtCmdHandler;
   MyDFGWidget * qtDFGWidget;
-  FabricCore::Client * client;
+  FabricCore::Client client;
   FabricServices::ASTWrapper::KLASTManager * manager;
-  FabricServices::DFGWrapper::Host * host;
-  FabricServices::DFGWrapper::Binding binding;
-  FabricServices::DFGWrapper::GraphExecutablePtr graph;
-  FabricServices::Commands::CommandStack stack;
+  FabricCore::DFGHost host;
+  FabricCore::DFGBinding binding;
+  FabricCore::DFGExec graph;
 };
 
 WindowData * g_windowData = NULL;
@@ -58,6 +80,7 @@ void openCanvasUI(HWND hwnd)
     int argc = 0;
     g_windowData->qtApp = new QApplication(argc, NULL);
     g_windowData->qtMainWindow = new QMainWindow();
+    g_windowData->qtCmdHandler = new MyCmdHandler();
     g_windowData->qtDFGWidget = new MyDFGWidget(g_windowData->qtMainWindow);
     g_windowData->qtMainWindow->setCentralWidget(g_windowData->qtDFGWidget);
 
@@ -69,8 +92,9 @@ void openCanvasUI(HWND hwnd)
       g_windowData->manager,
       g_windowData->host,
       g_windowData->binding,
+      "",
       g_windowData->graph,
-      &g_windowData->stack,
+      g_windowData->qtCmdHandler,
       true,
       config
     );
@@ -93,10 +117,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_CLOSE:
     {
       // g_qtMainWindow->close();
-      if(g_windowData->host)
-        delete(g_windowData->host);
-      if(g_windowData->client)
-        delete(g_windowData->client);
       if(g_windowData->qtApp)
         delete(g_windowData->qtApp);
       delete(g_windowData);
@@ -189,9 +209,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   g_windowData = new WindowData();
   g_windowData->qtApp = NULL;
   g_windowData->qtMainWindow = NULL;
-  g_windowData->client = NULL;
   g_windowData->manager = NULL;
-  g_windowData->host = NULL;
 
 
   // create the Fabric Client, a graph, etc....
@@ -201,27 +219,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     FabricCore::Client::CreateOptions options;
     memset( &options, 0, sizeof( options ) );
     options.optimizationType = FabricCore::ClientOptimizationType_Background;
-    g_windowData->client = new FabricCore::Client(&MyDFGWidget::log, NULL, &options);
+    g_windowData->client = FabricCore::Client(&MyDFGWidget::log, NULL, &options);
 
     // create a host for Canvas
-    g_windowData->host = new DFGWrapper::Host(*g_windowData->client);
+    g_windowData->host = g_windowData->client.getDFGHost();
 
-    g_windowData->binding = g_windowData->host->createBindingToNewGraph();
-    g_windowData->graph = DFGWrapper::GraphExecutablePtr::StaticCast(g_windowData->binding.getExecutable());
+    g_windowData->binding = g_windowData->host.createBindingToNewGraph();
+    g_windowData->graph = g_windowData->binding.getExec();
 
     // add a report node
-    DFGWrapper::NodePtr reportNode = g_windowData->graph->addNodeFromPreset("Fabric.Core.Func.Report");
+    std::string reportNode = g_windowData->graph.addInstFromPreset("Fabric.Core.Func.Report");
 
     // add an in and one out port
-    g_windowData->graph->addPort("caption", FabricCore::DFGPortType_In);
-    g_windowData->graph->addPort("result", FabricCore::DFGPortType_Out);
+    g_windowData->graph.addExecPort("caption", FabricCore::DFGPortType_In);
+    g_windowData->graph.addExecPort("result", FabricCore::DFGPortType_Out);
 
     // connect things up
-    g_windowData->graph->getPort("caption")->connectTo(reportNode->getPort("value"));
-    reportNode->getPort("value")->connectTo(g_windowData->graph->getPort("result"));
+    g_windowData->graph.connectTo("caption", (reportNode + ".value").c_str());
+    g_windowData->graph.connectTo((reportNode + ".value").c_str(), "result");
 
     // setup the values to perform on
-    FabricCore::RTVal value = FabricCore::RTVal::ConstructString(*g_windowData->client, "test test test");
+    FabricCore::RTVal value = FabricCore::RTVal::ConstructString(g_windowData->client, "test test test");
     g_windowData->binding.setArgValue("result", value);
     g_windowData->binding.setArgValue("caption", value);
   }

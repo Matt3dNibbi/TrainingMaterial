@@ -1,14 +1,10 @@
 #include "BaseInterface.h"
 
-using namespace FabricServices;
-
 FabricCore::Client BaseInterface::s_client;
-DFGWrapper::Host * BaseInterface::s_host = NULL;
-FabricServices::ASTWrapper::KLASTManager * BaseInterface::s_manager = NULL;
-FabricServices::Commands::CommandStack BaseInterface::s_stack;
+FabricCore::DFGHost BaseInterface::s_host;
 unsigned int BaseInterface::s_maxId = 0;
-void (*BaseInterface::s_logFunc)(void *, const char *, unsigned int) = NULL;
 std::map<unsigned int, BaseInterface*> BaseInterface::s_instances;
+void (*BaseInterface::s_logFunc)(void *, FTL::CStrRef message);
 
 BaseInterface::BaseInterface()
 {
@@ -28,13 +24,7 @@ BaseInterface::BaseInterface()
       s_client = FabricCore::Client(&logFunc, NULL, &options);
 
       // create a host for Canvas
-      s_host = new DFGWrapper::Host(s_client);
-
-	  // create KL AST manager
-      s_manager = new ASTWrapper::KLASTManager(&s_client);
-
-	  // command stack
-	  s_stack;
+      s_host = s_client.getDFGHost();
     }
     catch(FabricCore::Exception e)
     {
@@ -45,11 +35,12 @@ BaseInterface::BaseInterface()
   try
   {
     // create an empty binding
-    m_binding = s_host->createBindingToNewGraph();
-    m_binding.setNotificationCallback(bindingNotificationCallback, this);
+    m_binding = s_host.createBindingToNewGraph();
+    m_binding.setNotificationCallback(BindingCallback, this);
+    FabricCore::DFGExec exec = m_binding.getExec();
 
     // set the graph on the view
-    setGraph(DFGWrapper::GraphExecutablePtr::StaticCast(m_binding.getExecutable()));
+    m_dfgView = exec.createView( &ExecCallback, this );
   }
   catch(FabricCore::Exception e)
   {
@@ -63,7 +54,8 @@ BaseInterface::~BaseInterface()
 {
   std::map<unsigned int, BaseInterface*>::iterator it = s_instances.find(m_id);
 
-  m_binding = DFGWrapper::Binding();
+  m_dfgView = FabricCore::DFGView();
+  m_binding = FabricCore::DFGBinding();
 
   if(it != s_instances.end())
   {
@@ -73,9 +65,7 @@ BaseInterface::~BaseInterface()
       try
       {
         printf("Destructing client...\n");
-		s_stack.clear();
-		delete(s_manager);
-        delete(s_host);
+        s_host = FabricCore::DFGHost();
         s_client = FabricCore::Client();
       }
       catch(FabricCore::Exception e)
@@ -104,31 +94,21 @@ FabricCore::Client * BaseInterface::getClient()
   return &s_client;
 }
 
-FabricServices::DFGWrapper::Host * BaseInterface::getHost()
+FabricCore::DFGHost & BaseInterface::getHost()
 {
   return s_host;
 }
 
-FabricServices::DFGWrapper::Binding * BaseInterface::getBinding()
+FabricCore::DFGBinding & BaseInterface::getBinding()
 {
-  return &m_binding;
-}
-
-FabricServices::ASTWrapper::KLASTManager * BaseInterface::getManager()
-{
-  return s_manager;
-}
-
-FabricServices::Commands::CommandStack * BaseInterface::getStack()
-{
-  return &s_stack;
+  return m_binding;
 }
 
 std::string BaseInterface::getJSON()
 {
   try
   {
-    return m_binding.getExecutable()->exportJSON();
+    return m_binding.exportJSON().getCString();
   }
   catch(FabricCore::Exception e)
   {
@@ -141,8 +121,11 @@ void BaseInterface::setFromJSON(const std::string & json)
 {
   try
   {
-    m_binding = s_host->createBindingFromJSON(json.c_str());
-    setGraph(DFGWrapper::GraphExecutablePtr::StaticCast(m_binding.getExecutable()));
+    m_binding = s_host.createBindingFromJSON(json.c_str());
+    FabricCore::DFGExec exec = m_binding.getExec();
+
+    // create a new view
+    m_dfgView = exec.createView( &ExecCallback, this );
   }
   catch(FabricCore::Exception e)
   {
@@ -150,36 +133,26 @@ void BaseInterface::setFromJSON(const std::string & json)
   }
 }
 
-void BaseInterface::setLogFunc(void (*in_logFunc)(void *, const char *, unsigned int))
+void BaseInterface::setLogFunc(void (*in_logFunc)(void *, FTL::CStrRef))
 {
 	s_logFunc = in_logFunc;
 }
 
-void BaseInterface::logFunc(void * userData, const char * message, unsigned int length)
+void BaseInterface::logFunc(
+  void * userData, 
+  FEC_ReportSource source,
+  FEC_ReportLevel level,
+  const char * message, 
+  unsigned int length
+  )
 {
+  FTL::CStrRef ref( message, length );
   if (s_logFunc)
   {
-    s_logFunc(userData, message, length);
+    s_logFunc(userData, ref);
   }
   else
   {
-    printf("BaseInterface: %s\n", message);
-  }
-}
-
-void BaseInterface::bindingNotificationCallback(void * userData, char const *jsonCString, uint32_t jsonLength)
-{
-  if(!jsonCString)
-    return;
-  BaseInterface * interf = (BaseInterface *)userData;
-
-  FabricCore::Variant notificationVar = FabricCore::Variant::CreateFromJSON(jsonCString, jsonLength);
-
-  const FabricCore::Variant * descVar = notificationVar.getDictValue("desc");
-  std::string descStr = descVar->getStringData();
-
-  if(descStr == "argTypeChanged")
-  {
-    printf("an argument type has changed. you might want to create a DCC port now.\n");
+    printf("BaseInterface: %s\n", ref.c_str());
   }
 }

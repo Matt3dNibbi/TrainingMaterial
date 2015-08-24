@@ -1,13 +1,13 @@
 #ifndef __BASEINTERFACE_H__
 #define __BASEINTERFACE_H__
 
-#include <DFGWrapper/DFGWrapper.h>
-#include <ASTWrapper/KLASTManager.h>
-#include <Commands/CommandStack.h>
+#include <FabricCore.h>
+#include <FTL/CStrRef.h>
+#include <FTL/JSONValue.h>
 #include <map>
 
 // a management class for client and host
-class BaseInterface : public FabricServices::DFGWrapper::View
+class BaseInterface
 {
 public:
   BaseInterface();
@@ -22,57 +22,91 @@ public:
 
   // accessors
   static FabricCore::Client * getClient();
-  static FabricServices::DFGWrapper::Host * getHost();
-  FabricServices::DFGWrapper::Binding * getBinding();
-  static FabricServices::ASTWrapper::KLASTManager * getManager();
-  static FabricServices::Commands::CommandStack * getStack();
+  static FabricCore::DFGHost & getHost();
+  FabricCore::DFGBinding & getBinding();
 
   // persistence
   std::string getJSON();
   void setFromJSON(const std::string & json);
 
   // logging.
-  static void setLogFunc(void (*in_logFunc)(void *, const char *, unsigned int));
+  static void setLogFunc(void (*in_logFunc)(void *, FTL::CStrRef));
 
-  // notifications
-  // for now we only implement onPortInserted and onPortRemoved
-  virtual void onNotification(char const * json) {}
-  virtual void onNodeInserted(FabricServices::DFGWrapper::NodePtr node) {}
-  virtual void onNodeRemoved(FabricServices::DFGWrapper::NodePtr node) {}
-  virtual void onNodePortInserted(FabricServices::DFGWrapper::NodePortPtr pin) {}
-  virtual void onNodePortRemoved(FabricServices::DFGWrapper::NodePortPtr pin) {}
-  virtual void onExecPortInserted(FabricServices::DFGWrapper::ExecPortPtr port) {}
-  virtual void onExecPortRemoved(FabricServices::DFGWrapper::ExecPortPtr port) {}
-  virtual void onPortsConnected(FabricServices::DFGWrapper::PortPtr src, FabricServices::DFGWrapper::PortPtr dst) {}
-  virtual void onPortsDisconnected(FabricServices::DFGWrapper::PortPtr src, FabricServices::DFGWrapper::PortPtr dst) {}
-  virtual void onNodeMetadataChanged(FabricServices::DFGWrapper::NodePtr node, const char * key, const char * metadata) {}
-  virtual void onNodeTitleChanged(FabricServices::DFGWrapper::NodePtr node, const char * title) {}
-  virtual void onExecPortRenamed(FabricServices::DFGWrapper::ExecPortPtr port, const char * oldName) {}
-  virtual void onNodePortRenamed(FabricServices::DFGWrapper::NodePortPtr pin, const char * oldName) {}
-  virtual void onExecMetadataChanged(FabricServices::DFGWrapper::ExecutablePtr exec, const char * key, const char * metadata) {}
-  virtual void onExtDepAdded(const char * extension, const char * version) {}
-  virtual void onExtDepRemoved(const char * extension, const char * version) {}
-  virtual void onNodeCacheRuleChanged(const char * path, const char * rule) {}
-  virtual void onExecCacheRuleChanged(const char * path, const char * rule) {}
-  virtual void onExecPortResolvedTypeChanged(FabricServices::DFGWrapper::ExecPortPtr port, const char * resolvedType) {}
-  virtual void onExecPortTypeSpecChanged(FabricServices::DFGWrapper::ExecPortPtr port, const char * typeSpec) {}
-  virtual void onNodePortResolvedTypeChanged(FabricServices::DFGWrapper::NodePortPtr pin, const char * resolvedType) {}
-  virtual void onExecPortMetadataChanged(FabricServices::DFGWrapper::ExecPortPtr port, const char * key, const char * metadata) {}
-  virtual void onNodePortMetadataChanged(FabricServices::DFGWrapper::NodePortPtr pin, const char * key, const char * metadata) {}
-  virtual void onNodePortTypeChanged(FabricServices::DFGWrapper::NodePortPtr pin, FabricCore::DFGPortType pinType) {}
-  virtual void onExecPortTypeChanged(FabricServices::DFGWrapper::ExecPortPtr port, FabricCore::DFGPortType portType) {}
+  // binding notification callback.
+  virtual void onBindingNotification(FTL::CStrRef jsonStr)
+  {
+    printf("Notification received %s.\n", jsonStr.c_str());
+
+    // decode json
+    FTL::JSONStrWithLoc jsonStrWithLoc( jsonStr );
+    FTL::OwnedPtr<FTL::JSONObject> jsonObject(
+      FTL::JSONValue::Decode( jsonStrWithLoc )->cast<FTL::JSONObject>()
+      );
+
+    FTL::CStrRef descStr = jsonObject->getString( FTL_STR("desc") );
+    printf("Description is: %s\n", descStr.c_str());
+
+    /* here you can go ahead and decode further if you
+       want to react to a specific notification
+    */
+  }
+
+  // exec notification callback.
+  virtual void onExecNotification(FTL::CStrRef jsonStr)
+  {
+    printf("Notification received %s.\n", jsonStr.c_str());
+
+    // decode json
+    FTL::JSONStrWithLoc jsonStrWithLoc( jsonStr );
+    FTL::OwnedPtr<FTL::JSONObject> jsonObject(
+      FTL::JSONValue::Decode( jsonStrWithLoc )->cast<FTL::JSONObject>()
+      );
+
+    FTL::CStrRef descStr = jsonObject->getString( FTL_STR("desc") );
+    printf("Description is: %s\n", descStr.c_str());
+
+    /* here you can go ahead and decode further if you
+       want to react to a specific notification
+    */
+  }
 
 private:
 
-  static void logFunc(void * userData, const char * message, unsigned int length);
-  static void (*s_logFunc)(void *, const char *, unsigned int);
-  static void bindingNotificationCallback(void * userData, char const *jsonCString, uint32_t jsonLength);
+  static void logFunc(
+    void * userData, 
+    FEC_ReportSource source,
+    FEC_ReportLevel level,
+    const char * message, 
+    unsigned int length
+    );
+  static void (*s_logFunc)(void *, FTL::CStrRef message);
+
+  static void ExecCallback(
+    void *thisVoidPtr,
+    char const *jsonCStr,
+    uint32_t jsonSize
+    )
+  {
+    static_cast<BaseInterface *>( thisVoidPtr )->onExecNotification(
+      FTL::CStrRef( jsonCStr, jsonSize )
+      );
+  }
+
+  static void BindingCallback(
+    void *thisVoidPtr,
+    char const *jsonCStr,
+    uint32_t jsonSize
+    )
+  {
+    static_cast<BaseInterface *>( thisVoidPtr )->onBindingNotification(
+      FTL::CStrRef( jsonCStr, jsonSize )
+      );
+  }
 
   static FabricCore::Client s_client;
-  static FabricServices::DFGWrapper::Host * s_host;
-  FabricServices::DFGWrapper::Binding m_binding;
-  static FabricServices::ASTWrapper::KLASTManager * s_manager;
-  static FabricServices::Commands::CommandStack s_stack;
+  static FabricCore::DFGHost s_host;
+  FabricCore::DFGBinding m_binding;
+  FabricCore::DFGView m_dfgView;
   unsigned int m_id;
   static unsigned int s_maxId;
   static std::map<unsigned int, BaseInterface*> s_instances;
