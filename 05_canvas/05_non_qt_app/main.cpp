@@ -25,6 +25,8 @@ class MyCmdHandler : public DFG::DFGUICmdHandler_QUndo
 public:
   MyCmdHandler() : DFG::DFGUICmdHandler_QUndo(&m_stack) {};
 
+  QUndoStack * stack() { return &m_stack; }
+
 private:
 
   QUndoStack m_stack;
@@ -34,8 +36,9 @@ class MyDFGWidget : public DFG::DFGCombinedWidget
 {
 public:
 
-  MyDFGWidget(QWidget * parent)
+  MyDFGWidget(QWidget * parent, MyCmdHandler * handler)
   : DFGCombinedWidget(parent)
+  , m_handler(handler)
   {
 
   }
@@ -55,6 +58,20 @@ public:
   {
     printf("%s\n", message);
   }
+
+public slots:
+  virtual void onUndo()
+  {
+    m_handler->stack()->undo();
+  }
+
+  virtual void onRedo()
+  {
+    m_handler->stack()->redo();
+  }
+
+private:
+  MyCmdHandler * m_handler;
 };
 
 struct WindowData
@@ -81,7 +98,7 @@ void openCanvasUI(HWND hwnd)
     g_windowData->qtApp = new QApplication(argc, NULL);
     g_windowData->qtMainWindow = new QMainWindow();
     g_windowData->qtCmdHandler = new MyCmdHandler();
-    g_windowData->qtDFGWidget = new MyDFGWidget(g_windowData->qtMainWindow);
+    g_windowData->qtDFGWidget = new MyDFGWidget(g_windowData->qtMainWindow, g_windowData->qtCmdHandler);
     g_windowData->qtMainWindow->setCentralWidget(g_windowData->qtDFGWidget);
 
     DFG::DFGConfig config;
