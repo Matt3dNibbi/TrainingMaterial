@@ -24,4 +24,4 @@ if platform.system().lower().startswith('darwin'):
   env.Append(LINKFLAGS = ['-stdlib=libstdc++'])
 
 
-p = env.Program('basicgraph', Glob('*.cpp'))
+p = env.Program('helloworld', Glob('*.cpp'))

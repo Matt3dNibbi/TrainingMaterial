@@ -49,7 +49,7 @@ env.Append(CPPDEFINES = ['FEC_SHARED'])
 
 # Fabric Engine libraries
 # and standard libraries
-env.Append(LIBS = ['FabricCore-2.0'])
+env.Append(LIBS = ['FabricCore-2.4'])
 if buildType == 'Debug':
   env.Append(LIBS = ['FabricServices-MSVC-'+env['MSVC_VERSION']+'-mtd'])
 else:
