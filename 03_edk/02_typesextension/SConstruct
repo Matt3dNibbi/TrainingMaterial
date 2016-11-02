@@ -38,7 +38,7 @@ def RunKL2EDK(
 
   return result
 #---------------------------------------------------------
-extEnv = Environment()
+extEnv = Environment(MSVC_VERSION='12.0')
 extEnv.AddMethod(RunKL2EDK)
 
 if sys.platform == 'win32':
@@ -66,7 +66,7 @@ extAlias = extEnv.Alias('ext', extFiles)
 
 #---------------------------------------------------------
 
-testEnv = Environment()
+testEnv = Environment(MSVC_VERSION='12.0')
 
 testEnv.Append(CPPPATH = [os.path.join(os.environ['FABRIC_DIR'], 'include')])
 testEnv.Append(LIBPATH = [os.path.join(os.environ['FABRIC_DIR'], 'lib')])
