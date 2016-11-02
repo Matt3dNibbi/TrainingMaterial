@@ -1,40 +1,68 @@
 
-#include <FabricSplice.h>
+#include <FabricCore.h>
 #include <string>
+
+void myLogFunc(
+  void * userData, 
+  FEC_ReportSource source,
+  FEC_ReportLevel level,
+  const char * message, 
+  unsigned int length
+  )
+{
+  printf("[MyLog] %s\n", message);
+}
 
 int main(int argc, const char * argv[]) 
 {
-  FabricSplice::Initialize();
+  // create a client
+  FabricCore::Client::CreateOptions options;
+  memset( &options, 0, sizeof( options ) );
 
-  // use the local folder for finding extensions
-  FabricSplice::addExtFolder(".");
+  // define the local folder as search directory for extension
+  char const * localFolder = ".";
+  options.numExtPaths = 1;
+  options.extPaths = &localFolder;
 
+  options.optimizationType = FabricCore::ClientOptimizationType_Background;
+  FabricCore::Client client(&myLogFunc, NULL, &options);
+
+  FabricCore::DFGBinding binding;
   try
   {
-    // create the first graph
-    FabricSplice::DGGraph graph("myGraph");
+    // create a host for Canvas
+    FabricCore::DFGHost host = client.getDFGHost();
 
-    // create the first DGNode
-    graph.constructDGNode("testNode");
+    // create a binding to an empty function
+    binding = host.createBindingToNewFunc();
+    FabricCore::DFGExec functionExec = binding.getExec();
 
     // setup the kl code
     std::string klCode;
     klCode += "require SimpleExtension;\n";
     klCode += "\n";
-    klCode += "operator testOp() {\n";
+    klCode += "dfgEntry {\n";
     klCode += "  SimplePrintf('Hello World!');\n";
     klCode += "}\n";
-    graph.constructKLOperator("testOp", klCode.c_str());
 
-    // evaluate the graph
-    graph.evaluate();
+    // add a dependency to the extension to this canvas function
+    functionExec.addExtDep("SimpleExtension");
+
+    // set the code on the function
+    functionExec.setCode(klCode.c_str());
+
+    // execute the binding
+    binding.execute();
   }
-  catch(FabricSplice::Exception e)
+  catch(FabricCore::Exception e)
   {
-    printf("%s\n", e.what());
+    printf("%s\n", e.getDesc_cstr());
+    if(binding.isValid())
+    {
+      printf("%s\n", binding.getErrors(true).getCStr());
+    }
     return 1;
   }
 
-  FabricSplice::Finalize();
   return 0;
 }
