@@ -1,0 +1,12 @@
+*.kludge.py
+*.cpp
+*.kl
+*.json
+*.SConstruct
+*.os
+*.o
+*.lib
+*.so
+*.dylib
+*.dll
+*.test.*
